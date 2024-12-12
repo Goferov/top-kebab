@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('address_id');
             $table->string('name');
             $table->text('description')->nullable();
-            $table->string('image', 64)->nullable();
+            $table->string('image')->nullable();
             $table->string('email', 255)->nullable();
             $table->string('website', 255)->nullable();
             $table->string('phone', 16)->nullable();
