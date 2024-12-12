@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Restaurant extends Model
 {
@@ -23,13 +25,13 @@ class Restaurant extends Model
     ];
 
     // One to one
-    public function address()
+    public function address(): HasOne
     {
         return $this->hasOne(Address::class, 'address_id');
     }
 
     // One to Many
-    public function reviews()
+    public function reviews(): HasMany
     {
         return $this->hasMany(Review::class, 'restaurant_id');
     }
