@@ -19,8 +19,7 @@ class ReviewFactory extends Factory
         return [
             'rate' => $this->faker->numberBetween(1, 5),
             'review' => $this->faker->paragraph(),
-            'publicate' => $this->faker->boolean(),
-            'status' => $this->faker->boolean(),
+            'publicate' => true,
             'created_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
         ];
     }

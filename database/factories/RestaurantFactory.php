@@ -25,8 +25,7 @@ class RestaurantFactory extends Factory
             'email' => $this->faker->unique()->safeEmail(),
             'website' => $this->faker->url(),
             'publicate' => $this->faker->boolean(),
-            'status' => $this->faker->boolean(),
-            'phone' => $this->faker->phoneNumber(),
+            'phone' => substr($this->faker->phoneNumber(), 0, 16),
         ];
     }
 }
