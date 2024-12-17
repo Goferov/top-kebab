@@ -11,4 +11,4 @@ Route::get('/user', function (Request $request) {
 
 Route::apiResource('restaurants', RestaurantController::class);
 Route::apiResource('restaurants.reviews', ReviewController::class)
-    ->scoped(['review' => 'restaurant']);
+    ->scoped()->except(['update']);
