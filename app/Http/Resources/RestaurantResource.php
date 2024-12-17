@@ -23,6 +23,7 @@ class RestaurantResource extends JsonResource
             'website' => $this->website,
             'phone' => $this->phone,
             'address' => new AddressResource($this->whenLoaded('address')),
+            'reviews' => ReviewResource::collection($this->whenLoaded('reviews'))
         ];
     }
 }
