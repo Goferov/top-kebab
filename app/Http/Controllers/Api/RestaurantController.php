@@ -15,7 +15,7 @@ class RestaurantController extends Controller
      */
     public function index()
     {
-        return RestaurantResource::collection(Restaurant::all());
+        return RestaurantResource::collection(Restaurant::with('address')->paginate());
     }
 
     /**
@@ -23,6 +23,10 @@ class RestaurantController extends Controller
      */
     public function store(Request $request)
     {
+//        DB::transaction(function() {
+//            //
+//        });
+
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
