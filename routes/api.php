@@ -12,6 +12,7 @@ Route::get('/user', function (Request $request) {
 
 Route::apiResource('restaurants', RestaurantController::class);
 Route::apiResource('restaurants.reviews', ReviewController::class)
-    ->scoped()->except(['update']);
+    ->scoped()->except(['update'])
+    ->middleware(['auth:sanctum']);
 
 Route::post('/login', [AuthController::class, 'login']);
