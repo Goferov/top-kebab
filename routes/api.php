@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\RestaurantController;
 use App\Http\Controllers\Api\ReviewController;
 use Illuminate\Http\Request;
@@ -12,3 +13,5 @@ Route::get('/user', function (Request $request) {
 Route::apiResource('restaurants', RestaurantController::class);
 Route::apiResource('restaurants.reviews', ReviewController::class)
     ->scoped()->except(['update']);
+
+Route::post('/login', [AuthController::class, 'login']);
