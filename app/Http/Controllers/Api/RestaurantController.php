@@ -67,7 +67,7 @@ class RestaurantController extends Controller
      */
     public function show(Restaurant $restaurant)
     {
-        return new RestaurantResource($restaurant->load('address'));
+        return new RestaurantResource($restaurant->load(['address', 'reviews']));
     }
 
     /**
