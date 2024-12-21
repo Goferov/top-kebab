@@ -7,6 +7,7 @@ use App\Http\Resources\RestaurantResource;
 use App\Models\Address;
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class RestaurantController extends Controller
 {
@@ -15,6 +16,7 @@ class RestaurantController extends Controller
      */
     public function index()
     {
+        Gate::authorize('viewAny', Restaurant::class);
         return RestaurantResource::collection(Restaurant::with('address')->paginate());
     }
 
@@ -26,6 +28,8 @@ class RestaurantController extends Controller
 //        DB::transaction(function() {
 //            //
 //        });
+
+        Gate::authorize('create', Restaurant::class);
 
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
@@ -67,6 +71,7 @@ class RestaurantController extends Controller
      */
     public function show(Restaurant $restaurant)
     {
+        Gate::authorize('view', Restaurant::class);
         return new RestaurantResource($restaurant->load(['address', 'reviews']));
     }
 
@@ -75,6 +80,7 @@ class RestaurantController extends Controller
      */
     public function update(Request $request, Restaurant $restaurant)
     {
+        Gate::authorize('update', Restaurant::class);
         $validatedData = $request->validate([
             'name' => 'sometimes|string|max:255',
             'description' => 'nullable|string',
@@ -117,6 +123,7 @@ class RestaurantController extends Controller
      */
     public function destroy(Restaurant $restaurant)
     {
+        Gate::authorize('delete', Restaurant::class);
         $restaurant->delete();
         return response(status: 204);
     }

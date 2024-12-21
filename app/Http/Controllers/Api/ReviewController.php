@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\RestaurantResource;
 use App\Http\Resources\ReviewResource;
 use App\Models\Restaurant;
 use App\Models\Review;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class ReviewController extends Controller
 {
@@ -16,6 +16,7 @@ class ReviewController extends Controller
      */
     public function index(Restaurant $restaurant)
     {
+        Gate::authorize('viewAny', Review::class);
         $reviews = $restaurant->reviews()->latest();
 
         return ReviewResource::collection(
@@ -28,7 +29,7 @@ class ReviewController extends Controller
      */
     public function store(Request $request, Restaurant $restaurant)
     {
-
+        Gate::authorize('create', Review::class);
         $validatedData = $request->validate([
             'rate' => 'required|integer|min:1|max:5',
             'review' => 'required|string',
@@ -48,6 +49,7 @@ class ReviewController extends Controller
      */
     public function show(Restaurant $restaurant, Review $review)
     {
+        Gate::authorize('view', Review::class);
         return new ReviewResource($review);
     }
 
@@ -64,6 +66,7 @@ class ReviewController extends Controller
      */
     public function destroy(Restaurant $restaurant, Review $review)
     {
+        Gate::authorize('delete', Review::class);
         $review->delete();
         return response(status: 204);
     }
