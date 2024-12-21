@@ -15,7 +15,7 @@ Route::apiResource('restaurants', RestaurantController::class)
 
 Route::apiResource('restaurants', RestaurantController::class)
     ->only(['store', 'update', 'destroy'])
-    ->middleware(['auth:sanctum']);
+    ->middleware(['auth:sanctum', 'throttle:api']);
 
 Route::apiResource('restaurants.reviews', ReviewController::class)
     ->scoped()
@@ -24,7 +24,7 @@ Route::apiResource('restaurants.reviews', ReviewController::class)
 Route::apiResource('restaurants.reviews', ReviewController::class)
     ->scoped()
     ->only(['store', 'destroy'])
-    ->middleware(['auth:sanctum']);
+    ->middleware(['auth:sanctum', 'throttle:api']);
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])
