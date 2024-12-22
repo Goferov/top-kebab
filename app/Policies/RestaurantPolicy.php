@@ -29,7 +29,7 @@ class RestaurantPolicy
      */
     public function create(User $user): bool
     {
-        return $user->role === 'admin';
+        return $user->hasRole('admin');
     }
 
     /**
@@ -37,7 +37,7 @@ class RestaurantPolicy
      */
     public function update(User $user, Restaurant $restaurant): bool
     {
-        return $user->role === 'admin';
+        return $user->hasRole('admin');
     }
 
     /**
@@ -45,7 +45,7 @@ class RestaurantPolicy
      */
     public function delete(User $user, Restaurant $restaurant): bool
     {
-        return $user->role === 'admin';
+        return $user->hasRole('admin');
     }
 
     /**
