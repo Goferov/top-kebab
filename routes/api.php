@@ -27,5 +27,6 @@ Route::apiResource('restaurants.reviews', ReviewController::class)
     ->middleware(['auth:sanctum', 'throttle:api']);
 
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])
-    ->middleware(['auth:sanctum']);;
+    ->middleware(['auth:sanctum']);
