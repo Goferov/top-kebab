@@ -48,6 +48,11 @@ class RestaurantPolicy
         return $user->hasRole('admin');
     }
 
+    public function togglePublish(User $user, Restaurant $restaurant): bool
+    {
+        return $user->hasRole('admin');
+    }
+
     /**
      * Determine whether the user can restore the model.
      */

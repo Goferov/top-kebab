@@ -14,7 +14,7 @@ Route::apiResource('restaurants', RestaurantController::class)
     ->only(['index', 'store']);
 
 Route::apiResource('restaurants', RestaurantController::class)
-    ->only(['store', 'update', 'destroy'])
+    ->only(['store', 'update', 'destroy', 'togglePublish'])
     ->middleware(['auth:sanctum', 'throttle:api']);
 
 Route::apiResource('restaurants.reviews', ReviewController::class)

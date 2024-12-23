@@ -127,4 +127,19 @@ class RestaurantController extends Controller
         $restaurant->delete();
         return response(status: 204);
     }
+
+    public function togglePublish(Restaurant $restaurant)
+    {
+        Gate::authorize('togglePublish', Restaurant::class);
+
+        $restaurant->publicate = !$restaurant->publicate;
+        $restaurant->save();
+
+        $status = $restaurant->publicate ? 'published' : 'unpublished';
+
+        return response()->json([
+            'message' => "Restaurant {$status} successfully.",
+            'restaurant' => new RestaurantResource($restaurant)
+        ], 200);
+    }
 }
