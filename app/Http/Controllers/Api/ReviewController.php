@@ -29,7 +29,7 @@ class ReviewController extends Controller
      */
     public function store(Request $request, Restaurant $restaurant)
     {
-        Gate::authorize('create', Review::class);
+//        Gate::authorize('create', Review::class);
         $validatedData = $request->validate([
             'rate' => 'required|integer|min:1|max:5',
             'review' => 'required|string',
@@ -49,7 +49,7 @@ class ReviewController extends Controller
      */
     public function show(Restaurant $restaurant, Review $review)
     {
-        Gate::authorize('view', Review::class);
+        Gate::authorize('view', $review);
         return new ReviewResource($review);
     }
 
@@ -66,7 +66,7 @@ class ReviewController extends Controller
      */
     public function destroy(Restaurant $restaurant, Review $review)
     {
-        Gate::authorize('delete', Review::class);
+        Gate::authorize('delete', $review);
         $review->delete();
         return response(status: 204);
     }
