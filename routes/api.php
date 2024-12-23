@@ -11,7 +11,7 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::apiResource('restaurants', RestaurantController::class)
-    ->only(['index', 'store']);
+    ->only(['index', 'show']);
 
 Route::apiResource('restaurants', RestaurantController::class)
     ->only(['store', 'update', 'destroy', 'togglePublish'])

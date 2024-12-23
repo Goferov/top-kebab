@@ -19,7 +19,7 @@ class RestaurantPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(?User $user, Restaurant $restaurant): bool
+    public function view(?User $user, ?Restaurant $restaurant): bool
     {
         return true;
     }

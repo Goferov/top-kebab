@@ -71,7 +71,7 @@ class RestaurantController extends Controller
      */
     public function show(Restaurant $restaurant)
     {
-        Gate::authorize('view', Restaurant::class);
+        Gate::authorize('view', $restaurant);
         return new RestaurantResource($restaurant->load(['address', 'reviews']));
     }
 
@@ -80,7 +80,7 @@ class RestaurantController extends Controller
      */
     public function update(Request $request, Restaurant $restaurant)
     {
-        Gate::authorize('update', Restaurant::class);
+        Gate::authorize('update', $restaurant);
         $validatedData = $request->validate([
             'name' => 'sometimes|string|max:255',
             'description' => 'nullable|string',
@@ -123,7 +123,12 @@ class RestaurantController extends Controller
      */
     public function destroy(Restaurant $restaurant)
     {
-        Gate::authorize('delete', Restaurant::class);
+        Gate::authorize('delete', $restaurant);
+
+        if ($restaurant->address) {
+            $restaurant->address->delete();
+        }
+
         $restaurant->delete();
         return response(status: 204);
     }
