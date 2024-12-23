@@ -29,7 +29,7 @@ class ReviewController extends Controller
      */
     public function store(Request $request, Restaurant $restaurant)
     {
-//        Gate::authorize('create', Review::class);
+        Gate::authorize('create', Review::class);
         $validatedData = $request->validate([
             'rate' => 'required|integer|min:1|max:5',
             'review' => 'required|string',
