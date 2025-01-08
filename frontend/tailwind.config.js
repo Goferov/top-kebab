@@ -8,12 +8,25 @@ module.exports = {
       colors: {
         brandRed: '#4B0000',
         brandBlack: '#1A1A1A',
+        brandGray: '#D1D1D1',
       },
       fontFamily: {
         sans: ['Poppins', 'sans-serif'],
-      }
+      },
+      container: {
+        center: true,
+        padding: '1rem',
+      },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addBase }) {
+      addBase({
+        'a:hover': {
+          color: '#F87171',
+        },
+      });
+    },
+  ],
 }
 
