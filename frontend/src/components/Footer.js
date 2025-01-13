@@ -37,12 +37,12 @@ function Footer() {
                 </div>
             </div>
             <div className='bg-brandBlack'>
-                <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 py-1 text-xs">
+                <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-4 py-1 text-xs text-center md:text-start">
                     <div>
                         TOPKEBAB &copy; {new Date().getFullYear()} Wszelkie prawa zastrzeżone.
                     </div>
-                    <div></div>
-                    <div className="text-end">
+                    <div className="hidden md:block"></div>
+                    <div className="md:text-end">
                         Realizacja: Marcin Godfryd
                     </div>
                 </div>
