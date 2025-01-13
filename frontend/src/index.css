@@ -5,3 +5,22 @@
 html {
     @apply font-sans;
 }
+
+.banner-img {
+    position: relative;
+    background-position: center;
+    background-image: url("/");
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 460px;
+    overflow: hidden;
+}
+.banner-overlayer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.6);
+}
+
