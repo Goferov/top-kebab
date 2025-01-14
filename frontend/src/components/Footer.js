@@ -21,7 +21,8 @@ function Footer() {
                         </div>
                         <div>
                             <h6 className="uppercase mb-3 font-bold">Kontakt</h6>
-                            <ul className="list-none">
+                            <ul className="list-none relative ps-4">
+                                <div className="absolute left-0 bottom-0 top-0 h-100 w-1 bg-brandRedLight"></div>
                                 <li>
                                     <a
                                         href="tel:+48514343443"
@@ -44,9 +45,10 @@ function Footer() {
                         </div>
                         <div>
                             <h6 className="uppercase mb-3 font-bold">Menu</h6>
-                            <ul className="list-none">
+                            <ul className="list-none relative ps-4">
+                                <div className="absolute left-0 bottom-0 top-0 h-100 w-1 bg-brandRedLight"></div>
                                 <li className="hover:text-red-400">
-                                    <a href="#">Home</a>
+                                    <a href="/">Home</a>
                                 </li>
                                 <li className="hover:text-red-400">
                                     <a href="/restaurant">Restauracje</a>
