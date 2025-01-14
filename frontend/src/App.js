@@ -6,19 +6,22 @@ import RestaurantList from './components/RestaurantList';
 import Login from './components/Login';
 import Home from "./components/Home";
 import Contact from "./components/Contact";
+import { ModalProvider } from './services/modal';
 // import RestaurantDetails from './components/RestaurantDetails';
 
 function App() {
   return (
-      <Router>
-        <Routes>
-            <Route element={<MainLayout />}>
-                <Route path="/" element={<Home />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/contact" element={<Contact />} />
-            </Route>
-        </Routes>
-      </Router>
+      <ModalProvider>
+          <Router>
+              <Routes>
+                  <Route element={<MainLayout />}>
+                      <Route path="/" element={<Home />} />
+                      <Route path="/login" element={<Login />} />
+                      <Route path="/contact" element={<Contact />} />
+                  </Route>
+              </Routes>
+          </Router>
+      </ModalProvider>
   );
 }
 

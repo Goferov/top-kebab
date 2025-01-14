@@ -1,8 +1,10 @@
 import React from 'react';
 import { useState } from "react";
+import { useModal } from '../services/modal';
 
 function Header() {
     const [isMenuOpen, setMenuOpen] = useState(false);
+    const { openModal } = useModal();
 
 
     return (
@@ -19,7 +21,8 @@ function Header() {
                         </a>
                     </div>
                     <div>
-                        <a id="login-btn" href="#" className="open-modal" data-modal="login-modal">
+                        <a id="login-btn" onClick={() => openModal('login')}
+                            href="#" className="open-modal" data-modal="login-modal">
                             <i className="fa-solid fa-user md:me-1 text-2xl md:text-xs"></i> <span
                             className="hidden md:inline">Zaloguj się</span>
                         </a>
