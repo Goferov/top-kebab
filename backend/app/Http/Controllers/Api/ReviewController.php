@@ -35,6 +35,14 @@ class ReviewController extends Controller
             'review' => 'required|string',
         ]);
 
+        $existingReview = $restaurant->reviews()
+            ->where('user_id', $request->user()->id)
+            ->first();
+
+        if ($existingReview) {
+            return response()->json(['message' => 'Review exists!'], 422);
+        }
+
         $review = $restaurant->reviews()->create([
             'user_id' => $request->user()->id,
             'rate'    => $validatedData['rate'],
