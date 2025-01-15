@@ -22,6 +22,7 @@ class RestaurantResource extends JsonResource
             'email' => $this->email,
             'website' => $this->website,
             'phone' => $this->phone,
+            'average_rate' => $this->whenLoaded('reviews', fn() => $this->reviews->avg('rate') ? round($this->reviews->avg('rate'), 2) : 0),
             'address' => new AddressResource($this->whenLoaded('address')),
             'reviews' => ReviewResource::collection($this->whenLoaded('reviews'))
         ];

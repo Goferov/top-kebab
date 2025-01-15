@@ -14,10 +14,76 @@ class RestaurantController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         Gate::authorize('viewAny', Restaurant::class);
-        return RestaurantResource::collection(Restaurant::with('address')->paginate());
+
+        $query = Restaurant::with(['address', 'reviews']);
+
+        $this->applyFilters($query, $request);
+
+        $this->applySorting($query, $request);
+
+        $this->applyLimit($query, $request);
+
+        $limit = $request->input('limit', 50);
+        $query->limit($limit);
+
+        $restaurants = $query->get();
+
+        return RestaurantResource::collection($restaurants);
+    }
+
+    private function applyFilters($query, Request $request)
+    {
+        if ($city = $request->input('city')) {
+            $query->whereHas('address', function ($q) use ($city) {
+                $q->where('city', 'LIKE', "%{$city}%");
+            });
+        }
+
+        if ($name = $request->input('name')) {
+            $query->where('name', 'LIKE', "%{$name}%");
+        }
+
+        if ($request->has('publicate')) {
+            $publicateParam = $request->input('publicate');
+            $publicate = $publicateParam === 'true' ? true : false;
+            $query->where('publicate', $publicate);
+        }
+    }
+
+    private function applyLimit($query, Request $request) {
+        if ($request->has('limit')) {
+            $limit = (int)$request->input('limit');
+            $query->limit($limit);
+        }
+    }
+
+    private function applySorting($query, Request $request)
+    {
+        switch ($request->input('sort')) {
+            case 2:
+                $query->orderBy('created_at', 'asc');
+                break;
+            case 3:
+                $query->orderBy('name', 'asc');
+                break;
+            case 4:
+                $query->orderBy('name', 'desc');
+                break;
+            case 5:
+                $query->withAvg('reviews', 'rate')
+                    ->orderBy('reviews_avg_rate', 'desc');
+                break;
+            case 6:
+                $query->withAvg('reviews', 'rate')
+                    ->orderBy('reviews_avg_rate', 'asc');
+                break;
+            default:
+                $query->orderBy('created_at', 'desc');
+                break;
+        }
     }
 
     /**
@@ -72,7 +138,7 @@ class RestaurantController extends Controller
     public function show(Restaurant $restaurant)
     {
         Gate::authorize('view', $restaurant);
-        return new RestaurantResource($restaurant->load(['address', 'reviews']));
+        return new RestaurantResource($restaurant->load(['address', 'reviews.user']));
     }
 
     /**
