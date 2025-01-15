@@ -10,6 +10,7 @@ import { ModalProvider } from './services/modal';
 import RestaurantList from './components/RestaurantList';
 import RestaurantDetails from './components/RestaurantDetails'
 import AdminRestaurantList from "./components/AdminRestaurantList";
+import AddRestaurant from "./components/AddRestaurant";
 
 function App() {
   return (
@@ -24,6 +25,8 @@ function App() {
                       <Route path="/contact" element={<Contact />} />
                       <Route path="/panel" element={<Panel />} />
                       <Route path="/restaurantList" element={<AdminRestaurantList />} />
+                      <Route path="/addRestaurant" element={<AddRestaurant />} />
+                      <Route path="/addRestaurant/:id" element={<AddRestaurant />} />
                   </Route>
               </Routes>
           </Router>

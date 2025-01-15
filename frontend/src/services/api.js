@@ -31,3 +31,11 @@ export function togglePublish(id) {
     return api.put(`/restaurants/${id}/toggle-publish`);
 }
 
+export function saveRestaurant(formData) {
+    return api.post('/restaurants', formData);
+}
+
+export function updateRestaurant(id, formData) {
+    return api.put(`/restaurants/${id}`, formData);
+}
+
