@@ -201,7 +201,7 @@ class RestaurantController extends Controller
 
     public function togglePublish(Restaurant $restaurant)
     {
-        Gate::authorize('togglePublish', Restaurant::class);
+        Gate::authorize('togglePublish', $restaurant);
 
         $restaurant->publicate = !$restaurant->publicate;
         $restaurant->save();

@@ -17,6 +17,11 @@ Route::apiResource('restaurants', RestaurantController::class)
     ->only(['store', 'update', 'destroy', 'togglePublish'])
     ->middleware(['auth:sanctum', 'throttle:api']);
 
+Route::put('/restaurants/{restaurant}/toggle-publish',
+    [RestaurantController::class, 'togglePublish']
+)->middleware(['auth:sanctum', 'throttle:api'])
+    ->name('restaurants.togglePublish');
+
 Route::apiResource('restaurants.reviews', ReviewController::class)
     ->scoped()
     ->only(['index', 'show']);
