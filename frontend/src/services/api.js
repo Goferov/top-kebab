@@ -6,7 +6,7 @@ export const api = axios.create({
     baseURL: API_URL
 });
 
-api.interceptors.request.use(config => {
+api.interceptors.request.use((config) => {
     const token = localStorage.getItem('token');
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
@@ -15,8 +15,9 @@ api.interceptors.request.use(config => {
 });
 
 
-export function getRestaurants() {
-    return api.get('/restaurants');
+export function getRestaurants(params = {}) {
+    // params = { city: 'Krakow', name: 'Efes', sort: 1, limit: 10, publicate: 'true' }
+    return api.get('/restaurants', { params });
 }
 
 export function getRestaurant(id) {
@@ -32,10 +33,41 @@ export function togglePublish(id) {
 }
 
 export function saveRestaurant(formData) {
-    return api.post('/restaurants', formData);
+    return api.post('/restaurants', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    });
 }
 
 export function updateRestaurant(id, formData) {
-    return api.put(`/restaurants/${id}`, formData);
+    return api.put(`/restaurants/${id}`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    });
 }
 
+export function storeReview(restaurantId, data) {
+    return api.post(`/restaurants/${restaurantId}/reviews`, data);
+}
+
+export function deleteReview(restaurantId, reviewId) {
+    return api.delete(`/restaurants/${restaurantId}/reviews/${reviewId}`);
+}
+
+export function login(credentials) {
+    return api.post('/login', credentials);
+}
+
+export function register(data) {
+    return api.post('/register', data);
+}
+
+export function logout() {
+    return api.post('/logout');
+}
+
+export function changePassword(data) {
+    return api.post('/change-password', data);
+}
