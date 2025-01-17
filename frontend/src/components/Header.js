@@ -1,11 +1,12 @@
 import React from 'react';
 import { useState } from "react";
 import { useModal } from '../services/modal';
+import Logout from "./Logout";
 
 function Header() {
     const [isMenuOpen, setMenuOpen] = useState(false);
     const { openModal } = useModal();
-
+    const token = localStorage.getItem('token');
 
     return (
         <header >
@@ -21,11 +22,23 @@ function Header() {
                         </a>
                     </div>
                     <div>
-                        <a id="login-btn" onClick={() => openModal('login')}
-                            href="#" className="open-modal" data-modal="login-modal">
-                            <i className="fa-solid fa-user md:me-1 text-2xl md:text-xs"></i> <span
-                            className="hidden md:inline">Zaloguj się</span>
-                        </a>
+                        {!token ? (
+                            <a
+                                onClick={() => openModal('login')}
+                                href="#"
+                                className="open-modal"
+                            >
+                                <i className="fa-solid fa-user md:me-1 text-2xl md:text-xs"></i>
+                                <span className="hidden md:inline">Zaloguj się</span>
+                            </a>
+                        ) : (
+                            <div className="flex items-center gap-3">
+                                <a href="/panel" className="hover:text-red-400">
+                                    <i className="fa-solid fa-user md:me-1 text-2xl md:text-xs"></i> <span className="hidden md:inline">Panel</span>
+                                </a>
+                                <Logout/>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
