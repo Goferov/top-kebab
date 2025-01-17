@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getRestaurant } from '../services/api';
+import StarRating from '../components/StarRating';
 
 function RestaurantDetails() {
     const { id } = useParams();
@@ -33,7 +34,6 @@ function RestaurantDetails() {
         const reviewText = e.target.review.value;
         console.log('Wysyłamy recenzję do API:', { rateValue, reviewText });
 
-
     };
 
     return (
@@ -43,9 +43,9 @@ function RestaurantDetails() {
 
                     <div className="md:w-1/3">
                         <img
-                            src="/placeholder.png"
+                            src={restaurant.image ? `${restaurant.image}` : '/placeholder.png'}
                             className="w-full h-64 object-cover border border-gray-200 md:block hidden"
-                            alt=""
+                            alt={restaurant.name}
                         />
                     </div>
 
@@ -53,15 +53,9 @@ function RestaurantDetails() {
                         <h1 className="font-bold text-4xl mb-2">{restaurant.name}</h1>
 
                         <div className="flex items-center mb-2">
-                            <div className="flex items-center gap-1 text-lg">
-                                <i className="fa-solid fa-star text-yellow-300"></i>
-                                <i className="fa-solid fa-star text-yellow-300"></i>
-                                <i className="fa-solid fa-star text-yellow-300"></i>
-                                <i className="fa-solid fa-star text-yellow-300"></i>
-                                <i className="fa-solid fa-star text-yellow-300"></i>
-                            </div>
+                            <StarRating rating={restaurant.average_rate} />
                             <div className="text-lg font-semibold ml-2 mt-0.5">
-                                4.8/5.0
+                                {restaurant.average_rate}/5.0
                             </div>
                         </div>
 
@@ -69,9 +63,9 @@ function RestaurantDetails() {
 
                         <div className="md:w-1/3 mb-6">
                             <img
-                                src="/placeholder.png"
+                                src={restaurant.image ? `${restaurant.image}` : '/placeholder.png'}
                                 className="w-full h-64 object-cover border border-gray-200 md:hidden block"
-                                alt=""
+                                alt={restaurant.name}
                             />
                         </div>
                         <div className="info mb-2">
@@ -136,7 +130,7 @@ function RestaurantDetails() {
                                     className="border border-gray-300 p-3 rounded-3xl"
                                 >
                                     <div className="flex items-center mb-1 font-medium">
-                                        {review.userName ?? 'Anonim'}
+                                        {review.user_name ?? 'Anonim'}
                                         <span className="mx-2 text-gray-400">|</span>
                                         <div className="font-bold">{review.rate}/5</div>
                                     </div>
