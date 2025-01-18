@@ -71,3 +71,7 @@ export function logout() {
 export function changePassword(data) {
     return api.post('/change-password', data);
 }
+
+export function getUser() {
+    return api.get('/user');
+}
