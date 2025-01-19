@@ -191,6 +191,8 @@ class RestaurantController extends Controller
     {
         Gate::authorize('delete', $restaurant);
 
+        $restaurant->reviews()->delete();
+
         if ($restaurant->address) {
             $restaurant->address->delete();
         }
