@@ -49,7 +49,7 @@ class ReviewController extends Controller
             'review'  => $validatedData['review'],
         ]);
 
-        return new ReviewResource($review);
+        return new ReviewResource($review->load('user'));
     }
 
     /**
