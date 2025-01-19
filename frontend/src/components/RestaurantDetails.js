@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getRestaurant } from '../services/api';
+import { getRestaurant, storeReview } from '../services/api';
 import StarRating from '../components/StarRating';
 
 function RestaurantDetails() {
@@ -27,14 +27,57 @@ function RestaurantDetails() {
         return <p>Ładowanie...</p>;
     }
 
-    const handleReviewSubmit = (e) => {
+    const handleReviewSubmit = async (e) => {
         e.preventDefault();
 
-        const rateValue = e.target.rate.value;
-        const reviewText = e.target.review.value;
-        console.log('Wysyłamy recenzję do API:', { rateValue, reviewText });
+        const rateValue = parseInt(e.target.rate.value, 10);
+        const reviewText = e.target.review.value.trim();
 
+        if (isNaN(rateValue) || rateValue < 1 || rateValue > 5) {
+            setMessage('Ocena musi być liczbą od 1 do 5.');
+            setSuccess(false);
+            return;
+        }
+
+        if (reviewText.length === 0 || reviewText.length > 250) {
+            setMessage('Treść opinii jest wymagana i nie może przekraczać 250 znaków.');
+            setSuccess(false);
+            return;
+        }
+
+        try {
+            const response = await storeReview(restaurant.id, {
+                rate: rateValue,
+                review: reviewText,
+            });
+
+            const newReview = response.data.data;
+
+            setMessage('Opinia została dodana pomyślnie!');
+            setSuccess(true);
+
+            const totalReviews = restaurant.reviews.length + 1;
+            const totalRating = restaurant.reviews.reduce((sum, r) => sum + r.rate, 0) + rateValue;
+            const newAverageRate = (totalRating / totalReviews).toFixed(2);
+
+            setRestaurant((prev) => ({
+                ...prev,
+                average_rate: newAverageRate,
+                reviews: [...prev.reviews, newReview],
+            }));
+
+            e.target.reset();
+        } catch (err) {
+            if (err.response?.status === 401) {
+                setMessage('Musisz być zalogowany, aby dodać opinię.');
+            } else {
+                setMessage(err.response?.data?.message || 'Wystąpił błąd podczas dodawania opinii.');
+            }
+            setSuccess(false);
+        }
     };
+
+
 
     return (
         <div className="container my-7">
@@ -146,10 +189,9 @@ function RestaurantDetails() {
 
                     <div className="md:w-1/3 ">
                         <form
-                            className=" p-4 border border-gray-300 rounded-3xl"
+                            className="p-4 border border-gray-300 rounded-3xl"
                             onSubmit={handleReviewSubmit}
                             method="post"
-                            action="/saveReview"
                         >
                             {message && (
                                 <p className={success ? 'text-green-600' : 'text-red-600'}>
@@ -169,25 +211,21 @@ function RestaurantDetails() {
                                     step="1"
                                     placeholder="Ocena (od 1 do 5)"
                                     required
+                                    title="Ocena musi być liczbą od 1 do 5."
                                 />
                             </div>
 
                             <div>
-                                <textarea
-                                    className="border border-black px-4 py-2 w-full rounded-2xl mb-4"
-                                    name="review"
-                                    rows="4"
-                                    maxLength={250}
-                                    placeholder="Treść (max 250 znaków)*"
-                                    required
-                                />
-                            </div>
-
-                            <input
-                                type="hidden"
-                                name="restaurant_id"
-                                value={restaurant.id}
+                            <textarea
+                                className="border border-black px-4 py-2 w-full rounded-2xl mb-4"
+                                name="review"
+                                rows="4"
+                                maxLength={250}
+                                placeholder="Treść (max 250 znaków)*"
+                                required
+                                title="Treść opinii jest wymagana i nie może przekraczać 250 znaków."
                             />
+                            </div>
 
                             <button
                                 type="submit"
@@ -196,6 +234,7 @@ function RestaurantDetails() {
                                 Dodaj opinie
                             </button>
                         </form>
+
                     </div>
                 </div>
             </section>
