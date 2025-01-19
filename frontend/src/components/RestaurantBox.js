@@ -11,7 +11,7 @@ export default function RestaurantBox({ restaurant }) {
             >
                 <div className="h-52">
                     <img
-                        src={restaurant.image ? `${restaurant.image}` : '/placeholder.png'}
+                        src={restaurant.image ? `${process.env.REACT_APP_STORAGE_URL}/uploads/${restaurant.image}` : '/placeholder.png'}
                         className="h-full object-cover w-full transition-transform hover:scale-110"
                         alt={restaurant.name}
                     />

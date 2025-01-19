@@ -110,8 +110,8 @@ function AdminRestaurantList() {
                                     <img
                                         src={
                                             restaurant.image
-                                                ? `/public/uploads/${restaurant.image}`
-                                                : '/public/img/placeholder.png'
+                                                ? `${process.env.REACT_APP_STORAGE_URL}/uploads/${restaurant.image}`
+                                                : '/placeholder.png'
                                         }
                                         alt={restaurant.name}
                                         className="w-16 h-16 object-cover border border-gray-200"
