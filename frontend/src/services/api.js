@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8000/api';
+const API_URL = `${process.env.REACT_APP_API_URL}/api`;
 
 export const api = axios.create({
     baseURL: API_URL
@@ -33,19 +33,11 @@ export function togglePublish(id) {
 }
 
 export function saveRestaurant(formData) {
-    return api.post('/restaurants', formData, {
-        headers: {
-            'Content-Type': 'multipart/form-data',
-        },
-    });
+    return api.post('/restaurants', formData);
 }
 
 export function updateRestaurant(id, formData) {
-    return api.put(`/restaurants/${id}`, formData, {
-        headers: {
-            'Content-Type': 'multipart/form-data',
-        },
-    });
+    return api.put(`/restaurants/${id}`, formData);
 }
 
 export function storeReview(restaurantId, data) {
