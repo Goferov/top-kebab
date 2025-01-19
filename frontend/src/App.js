@@ -25,7 +25,6 @@ function App() {
                       <Route path="/restaurant/:id" element={<RestaurantDetails />} />
                       <Route path="/contact" element={<Contact />} />
                       <Route path="/panel" element={<Panel />} />
-                      <Route path="/logout" element={<Logout />} />
                       <Route path="/restaurantList" element={<AdminRestaurantList />} />
                       <Route path="/addRestaurant" element={<AddRestaurant />} />
                       <Route path="/addRestaurant/:id" element={<AddRestaurant />} />
