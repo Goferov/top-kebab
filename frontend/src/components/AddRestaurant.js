@@ -73,8 +73,17 @@ function AddRestaurantPage() {
     };
 
     const handleFileChange = (e) => {
-        const file = e.target.files?.[0] || null;
-        setForm((prev) => ({ ...prev, file }));
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = () => {
+            setForm((prev) => ({
+                ...prev,
+                file: reader.result.split(',')[1], // Pobieramy tylko Base64 bez nagłówka
+            }));
+        };
+        reader.readAsDataURL(file);
     };
 
     const handleSubmit = async (e) => {
@@ -84,50 +93,48 @@ function AddRestaurantPage() {
         setLoading(true);
 
         try {
-            const formData = new FormData();
-            formData.append('name', form.name);
-            formData.append('email', form.email);
-            formData.append('phone', form.phone);
-            formData.append('website', form.website);
-            formData.append('description', form.description);
-
-            if (form.file) {
-                formData.append('file', form.file);
-            }
-            if (form.delete_file) {
-                formData.append('delete_file', '1');
-            }
-
-            formData.append('street', form.street);
-            formData.append('city', form.city);
-            formData.append('postalCode', form.postalCode);
-            formData.append('houseNo', form.houseNo);
-            formData.append('apartmentNo', form.apartmentNo);
-            if (form.addressId) {
-                formData.append('addressId', form.addressId);
-            }
+            const jsonData = {
+                name: form.name,
+                email: form.email || '',
+                phone: form.phone || '',
+                website: form.website || '',
+                description: form.description || '',
+                image: form.file || null,
+                delete_file: form.delete_file || false,
+                address: {
+                    street: form.street,
+                    city: form.city,
+                    postal_code: form.postalCode,
+                    house_no: form.houseNo,
+                    apartment_no: form.apartmentNo || null,
+                },
+            };
 
             let response;
             if (!id) {
-                response = await saveRestaurant(formData);
+                response = await saveRestaurant(jsonData);
+                const newId = response.data.data.id;
+                setSuccess('Dodano nową restaurację!');
+                navigate(`/addRestaurant/${newId}`);
             } else {
-                response = await updateRestaurant(id, formData);
+                response = await updateRestaurant(id, jsonData);
+                setSuccess('Zapisano zmiany w restauracji!');
             }
+
+            setForm({
+                ...form,
+                image: response.data.data.image,
+            });
 
             setLoading(false);
-
-            if (response.status >= 400) {
-                setMessages(['Błąd zapisu restauracji.']);
-                return;
-            }
-
-            setSuccess('Zapisano restaurację pomyślnie!');
-
         } catch (err) {
             setLoading(false);
-            setMessages([`Błąd: ${err.message}`]);
+            setMessages([`Błąd: ${err.response?.data?.message || err.message}`]);
         }
     };
+
+
+
 
     if (loading) {
         return <p className="p-4">Ładowanie...</p>;
@@ -156,7 +163,6 @@ function AddRestaurantPage() {
                 encType="multipart/form-data"
                 className="space-y-4 mb-5"
             >
-                {/* Nazwa */}
                 <div>
                     <input
                         className="border border-black py-2 px-3 w-full rounded-2xl"
@@ -169,7 +175,6 @@ function AddRestaurantPage() {
                     />
                 </div>
 
-                {/* Email */}
                 <div>
                     <input
                         className="border border-black py-2 px-3 w-full rounded-2xl"
@@ -181,7 +186,6 @@ function AddRestaurantPage() {
                     />
                 </div>
 
-                {/* Telefon */}
                 <div>
                     <input
                         className="border border-black py-2 px-3 w-full rounded-2xl"
@@ -193,7 +197,6 @@ function AddRestaurantPage() {
                     />
                 </div>
 
-                {/* Website */}
                 <div>
                     <input
                         className="border border-black py-2 px-3 w-full rounded-2xl"
@@ -205,7 +208,6 @@ function AddRestaurantPage() {
                     />
                 </div>
 
-                {/* Opis */}
                 <div>
           <textarea
               className="border border-black py-2 px-3 w-full rounded-2xl"
@@ -217,7 +219,6 @@ function AddRestaurantPage() {
           />
                 </div>
 
-                {/* Plik */}
                 <div>
                     <input
                         type="file"
@@ -228,7 +229,7 @@ function AddRestaurantPage() {
                     {id && form.image && (
                         <div className="mt-2">
                             <img
-                                src={`/public/uploads/${form.image}`}
+                                src={`${process.env.REACT_APP_STORAGE_URL}/uploads/${form.image}`}
                                 alt="Restaurant"
                                 width="120"
                                 height="120"
@@ -251,7 +252,6 @@ function AddRestaurantPage() {
 
                 <h2 className="text-xl font-semibold">Lokalizacja</h2>
 
-                {/* Ulica */}
                 <div>
                     <input
                         className="border border-black py-2 px-3 w-full rounded-2xl"
@@ -264,7 +264,6 @@ function AddRestaurantPage() {
                     />
                 </div>
 
-                {/* Miasto */}
                 <div>
                     <input
                         className="border border-black py-2 px-3 w-full rounded-2xl"
@@ -277,7 +276,6 @@ function AddRestaurantPage() {
                     />
                 </div>
 
-                {/* Kod pocztowy */}
                 <div>
                     <input
                         className="border border-black py-2 px-3 w-full rounded-2xl"
@@ -290,7 +288,6 @@ function AddRestaurantPage() {
                     />
                 </div>
 
-                {/* Numer budynku */}
                 <div>
                     <input
                         className="border border-black py-2 px-3 w-full rounded-2xl"
@@ -303,7 +300,6 @@ function AddRestaurantPage() {
                     />
                 </div>
 
-                {/* Numer mieszkania */}
                 <div>
                     <input
                         className="border border-black py-2 px-3 w-full rounded-2xl"
@@ -315,12 +311,10 @@ function AddRestaurantPage() {
                     />
                 </div>
 
-                {/* AddressId */}
                 {form.addressId && (
                     <input type="hidden" name="addressId" value={form.addressId} />
                 )}
 
-                {/* Submit */}
                 <button
                     type="submit"
                     className="bg-brandRed rounded-2xl text-white w-full py-2 font-medium text-lg rounded hover:bg-red-700 transition-colors"
