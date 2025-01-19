@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import PanelNav from './PanelNav';
+import { changePassword } from '../services/api';
 
 function Panel() {
     const [message, setMessage] = useState('');
     const [isAdmin, setIsAdmin] = useState(false);
 
-    const handleChangePassword = (e) => {
+    const handleChangePassword = async (e) => {
         e.preventDefault();
         const current = e.target.currentPassword.value;
         const newPass = e.target.newPassword.value;
@@ -16,7 +17,23 @@ function Panel() {
             return;
         }
 
+        if (newPass.length < 8) {
+            setMessage('Hasło musi mieć co najmniej 8 znaków!');
+            return;
+        }
 
+        try {
+            await changePassword({
+                current_password: current,
+                new_password: newPass,
+                new_password_confirmation: repeat,
+            });
+
+            setMessage('Hasło zostało zmienione pomyślnie!');
+            e.target.reset();
+        } catch (err) {
+            setMessage(err.response?.data?.message || 'Nie udało się zmienić hasła.');
+        }
     };
 
     return (
@@ -31,16 +48,19 @@ function Panel() {
 
                 <div className="content md:w-3/4">
                     {message && (
-                        <p className="text-lg font-semibold mb-2">
+                        <p
+                            className={`text-lg font-semibold mb-2 ${
+                                message.includes('pomyślnie') ? 'text-green-600' : 'text-red-600'
+                            }`}
+                        >
                             {message}
                         </p>
                     )}
 
                     <form
-                        className="user-form font-medium  grid grid-cols-1 lg:grid-cols-2 gap-4"
+                        className="user-form font-medium grid grid-cols-1 lg:grid-cols-2 gap-4"
                         onSubmit={handleChangePassword}
                         method="post"
-                        action="/changePassword"
                     >
                         <input
                             className="input border border-black rounded-2xl py-2 px-3 w-full"
