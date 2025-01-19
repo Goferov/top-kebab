@@ -1,20 +1,16 @@
 import React from 'react';
 
-function StarRating({ rating = 0 }) {
-    const maxStars = 5;
+const StarRating = ({ rating }) => {
+    const stars = Array(5)
+        .fill(0)
+        .map((_, index) => (
+            <i
+                key={index}
+                className={`fa-solid fa-star ${index < rating ? 'text-yellow-300' : 'text-gray-300'}`}
+            ></i>
+        ));
 
-    return (
-        <div className="flex items-center gap-1">
-            {[...Array(maxStars)].map((_, index) => {
-                const starValue = index + 1;
-                return starValue <= rating ? (
-                    <i key={index} className="fa-solid fa-star text-yellow-300"></i>
-                ) : (
-                    <i key={index} className="fa-regular fa-star text-yellow-300"></i>
-                );
-            })}
-        </div>
-    );
-}
+    return <div className="flex">{stars}</div>;
+};
 
 export default StarRating;
