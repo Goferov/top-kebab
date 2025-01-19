@@ -1,9 +1,23 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import PanelNav from './PanelNav';
-import { getRestaurants } from '../services/api';
+import { getRestaurants, deleteRestaurant, togglePublish } from '../services/api';
 
 function AdminRestaurantList() {
-    // Przykładowe metody obsługi przycisków:
+    const [restaurants, setRestaurants] = useState([]);
+    const [error, setError] = useState(null);
+    const [message, setMessage] = useState('');
+    const [success, setSuccess] = useState(false);
+
+    useEffect(() => {
+        getRestaurants()
+            .then((response) => {
+                setRestaurants(response.data.data || response.data);
+            })
+            .catch((err) => {
+                setError(err.message);
+            });
+    }, []);
+
     const handleAddRestaurant = () => {
         window.location.href = '/addRestaurant';
     };
@@ -12,30 +26,39 @@ function AdminRestaurantList() {
         window.location.href = `/addRestaurant/${id}`;
     };
 
-    const handlePublicate = (id, currentPub) => {
-        // Wywołanie zapytania do API, przełączenie publicate
-        console.log('Publicate toggled for ID:', id, 'Obecnie:', currentPub);
-        // Po sukcesie: odśwież listę lub zaktualizuj stan
+    const handlePublicate = async (id, currentPub) => {
+        try {
+            await togglePublish(id);
+            setRestaurants((prev) =>
+                prev.map((restaurant) =>
+                    restaurant.id === id
+                        ? { ...restaurant, publicate: !currentPub }
+                        : restaurant
+                )
+            );
+            setMessage(`Status publikacji został zmieniony dla restauracji ID: ${id}`);
+            setSuccess(true);
+        } catch (err) {
+            setMessage(err.response?.data?.message || 'Wystąpił błąd podczas zmiany statusu publikacji.');
+            setSuccess(false);
+        }
     };
 
-    const handleDelete = (id) => {
-        // Wywołanie API do usunięcia
-        console.log('Delete clicked for ID:', id);
-        // Po sukcesie: odśwież listę / usuń w stanie
+    const handleDelete = async (id) => {
+        if (!window.confirm('Czy na pewno chcesz usunąć tę restaurację?')) {
+            return;
+        }
+
+        try {
+            await deleteRestaurant(id);
+            setRestaurants((prev) => prev.filter((restaurant) => restaurant.id !== id));
+            setMessage(`Restauracja ID: ${id} została usunięta.`);
+            setSuccess(true);
+        } catch (err) {
+            setMessage(err.response?.data?.message || 'Wystąpił błąd podczas usuwania restauracji.');
+            setSuccess(false);
+        }
     };
-
-    const [restaurants, setRestaurants] = useState([]);
-    const [error, setError] = useState(null);
-
-    useEffect(() => {
-        getRestaurants()
-            .then(response => {
-                setRestaurants(response.data.data || response.data);
-            })
-            .catch(err => {
-                setError(err.message);
-            });
-    }, []);
 
     if (error) return <p>Błąd: {error}</p>;
 
@@ -49,6 +72,13 @@ function AdminRestaurantList() {
                 </div>
 
                 <div className="content md:w-3/4 pb-6">
+                    <div className="flex flex-col items-center justify-center mb-4">
+                        {message && (
+                            <p className={success ? 'text-green-600' : 'text-red-600'}>
+                                {message}
+                            </p>
+                        )}
+                    </div>
                     <div className="flex items-center justify-end mb-3">
                         <button
                             onClick={handleAddRestaurant}
@@ -87,9 +117,7 @@ function AdminRestaurantList() {
                                         className="w-16 h-16 object-cover border border-gray-200"
                                     />
                                 </td>
-                                <td className="py-2 px-3">
-                                    {restaurant.name}
-                                </td>
+                                <td className="py-2 px-3">{restaurant.name}</td>
                                 <td className="py-2 px-3">
                                     <div className="flex justify-center items-center gap-3">
                                         <button
@@ -104,7 +132,9 @@ function AdminRestaurantList() {
                                                 handlePublicate(restaurant.id, restaurant.publicate)
                                             }
                                             className={`${
-                                                restaurant.publicate ? 'text-green-600' : 'text-gray-400'
+                                                restaurant.publicate
+                                                    ? 'text-green-600'
+                                                    : 'text-red-600'
                                             } hover:text-green-800`}
                                             title="Publicate toggle"
                                         >
