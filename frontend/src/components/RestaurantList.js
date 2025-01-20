@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getRestaurants } from '../services/api';
-import RestaurantBox from "./RestaurantBox";
+import RestaurantBox from './RestaurantBox';
 
 export default function RestaurantList() {
     const [restaurants, setRestaurants] = useState([]);
@@ -10,27 +10,40 @@ export default function RestaurantList() {
     const [city, setCity] = useState('');
     const [order, setOrder] = useState('');
 
+    const [debouncedSearch, setDebouncedSearch] = useState(search);
+    const [debouncedCity, setDebouncedCity] = useState(city);
+
+    useEffect(() => {
+        const timer = setTimeout(() => setDebouncedSearch(search), 300);
+        return () => clearTimeout(timer);
+    }, [search]);
+
+    useEffect(() => {
+        const timer = setTimeout(() => setDebouncedCity(city), 300);
+        return () => clearTimeout(timer);
+    }, [city]);
+
     const fetchRestaurants = () => {
         const params = {};
 
-        if (search)  params.name = search;
-        if (city)    params.city = city;
-        if (order)   params.sort = order;
+        if (debouncedSearch) params.name = debouncedSearch;
+        if (debouncedCity) params.city = debouncedCity;
+        if (order) params.sort = order;
 
         params.publicate = 'true';
 
         getRestaurants(params)
-            .then(response => {
+            .then((response) => {
                 setRestaurants(response.data.data || []);
             })
-            .catch(err => {
+            .catch((err) => {
                 setError(err.message);
             });
     };
 
     useEffect(() => {
         fetchRestaurants();
-    }, [search, city, order]);
+    }, [debouncedSearch, debouncedCity, order]);
 
     if (error) {
         return <p>Błąd: {error}</p>;
