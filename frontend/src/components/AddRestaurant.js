@@ -5,6 +5,7 @@ import {
     saveRestaurant,
     updateRestaurant
 } from '../services/api';
+import Loader from "./Loader";
 
 function AddRestaurantPage() {
     const { id } = useParams();
@@ -150,7 +151,7 @@ function AddRestaurantPage() {
 
 
     if (loading) {
-        return <p className="p-4">Ładowanie...</p>;
+        return <Loader />;
     }
 
     return (
