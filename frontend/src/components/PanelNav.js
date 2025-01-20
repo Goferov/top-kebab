@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 function PanelNav({ isAdmin }) {
     return (
-        <ul className="user-menu list-none  border border-black">
+        <ul className="user-menu list-none border border-black">
             <li className="m-0">
                 <Link
                     to="/panel"
@@ -19,7 +19,7 @@ function PanelNav({ isAdmin }) {
                 <li className="m-0">
                     <Link
                         to="/restaurantList"
-                        className="flex items-center gap-1 px-3 py-1 hover:bg-brandRed"
+                        className="flex items-center gap-1 px-3 py-1 hover:bg-brandRed border-b border-black"
                         title="Lista restauracji"
                     >
                         <i className="fa-solid fa-list"></i>

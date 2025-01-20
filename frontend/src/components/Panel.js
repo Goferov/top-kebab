@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import PanelNav from './PanelNav';
 import { changePassword } from '../services/api';
+import { useUser } from '../contexts/UserContext';
 
 function Panel() {
     const [message, setMessage] = useState('');
-    const [isAdmin, setIsAdmin] = useState(false);
+    const { user } = useUser();
+    const isAdmin = user?.role_id === 1;
 
     const handleChangePassword = async (e) => {
         e.preventDefault();
@@ -41,7 +43,6 @@ function Panel() {
             <h1 className="text-2xl font-bold mb-4">Twoje konto</h1>
 
             <div className="user-panel flex flex-col md:flex-row gap-6">
-                {/* Lewa kolumna: nawigacja */}
                 <div className="md:w-1/4">
                     <PanelNav isAdmin={isAdmin} />
                 </div>
