@@ -14,6 +14,17 @@ api.interceptors.request.use((config) => {
     return config;
 });
 
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response && error.response.status === 401) {
+            console.warn('Token wygasł lub jest nieważny. Wylogowywanie...');
+            localStorage.removeItem('token');
+            window.location.href = '/';
+        }
+        return Promise.reject(error);
+    }
+);
 
 export function getRestaurants(params = {}) {
     // params = { city: 'Krakow', name: 'Efes', sort: 1, limit: 10, publicate: 'true' }
