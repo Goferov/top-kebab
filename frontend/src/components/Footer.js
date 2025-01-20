@@ -89,7 +89,7 @@ export default function Footer() {
                                 <img src="/logo-white.svg" alt="TopKebab logo" />
                             </a>
                             <p className="max-w-72">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus fermentum vitae dolor ut cursus. Phasellus tempor congue nunc. Nullam eget vestibulum nibh.
+                                TopKebab to nie tylko portal, to miejsce spotkań dla smakoszy kebaba. TopKebab to zespół pasjonatów, którzy dbają o to, aby każdy kebab, który znajduje się na naszej stronie, był godny uwagi.
                             </p>
                         </div>
                         <div>
