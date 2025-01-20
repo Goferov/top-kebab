@@ -87,7 +87,7 @@ function RestaurantDetails() {
                     <div className="md:w-1/3">
                         <img
                             src={restaurant.image ? `${process.env.REACT_APP_STORAGE_URL}/uploads/${restaurant.image}` : '/placeholder.png'}
-                            className="w-full h-64 object-cover border border-gray-200 md:block hidden"
+                            className="w-full  object-cover border border-gray-200 md:block hidden rounded-2xl h-100"
                             alt={restaurant.name}
                         />
                     </div>

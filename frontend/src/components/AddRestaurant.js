@@ -76,11 +76,24 @@ function AddRestaurantPage() {
         const file = e.target.files?.[0];
         if (!file) return;
 
+        const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        const maxFileSize = 2 * 1024 * 1024; // 2 MB
+
+        if (!validTypes.includes(file.type)) {
+            setMessages(['Plik musi być obrazem w formacie JPG, PNG lub GIF.']);
+            return;
+        }
+
+        if (file.size > maxFileSize) {
+            setMessages(['Plik jest za duży. Maksymalny rozmiar to 2 MB.']);
+            return;
+        }
+
         const reader = new FileReader();
         reader.onload = () => {
             setForm((prev) => ({
                 ...prev,
-                file: reader.result.split(',')[1], // Pobieramy tylko Base64 bez nagłówka
+                file: reader.result.split(',')[1],
             }));
         };
         reader.readAsDataURL(file);
