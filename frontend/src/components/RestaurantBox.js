@@ -9,7 +9,7 @@ export default function RestaurantBox({ restaurant }) {
                 href={`/restaurant/${restaurant.id}`}
                 className="block shadow-lg overflow-hidden rounded-2xl border border-gray-400 hover:text-inherit"
             >
-                <div className="h-52">
+                <div className="h-52 overflow-hidden">
                     <img
                         src={restaurant.image ? `${process.env.REACT_APP_STORAGE_URL}/uploads/${restaurant.image}` : '/placeholder.png'}
                         className="h-full object-cover w-full transition-transform hover:scale-110"
