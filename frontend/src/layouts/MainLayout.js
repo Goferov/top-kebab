@@ -7,7 +7,6 @@ function MainLayout() {
     return (
         <>
             <Header />
-            {/* W tym miejscu będzie renderowana konkretna podstrona */}
             <Outlet />
             <Footer />
         </>

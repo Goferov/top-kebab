@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getRestaurants } from '../services/api';
 import RestaurantBox from './RestaurantBox';
+import Placeholder from "./Placeholder";
 
 export default function RestaurantList() {
     const [restaurants, setRestaurants] = useState([]);
@@ -10,8 +11,10 @@ export default function RestaurantList() {
     const [city, setCity] = useState('');
     const [order, setOrder] = useState('');
 
-    const [debouncedSearch, setDebouncedSearch] = useState(search);
-    const [debouncedCity, setDebouncedCity] = useState(city);
+    const [debouncedSearch, setDebouncedSearch] = useState('');
+    const [debouncedCity, setDebouncedCity] = useState('');
+
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const timer = setTimeout(() => setDebouncedSearch(search), 300);
@@ -24,6 +27,7 @@ export default function RestaurantList() {
     }, [city]);
 
     const fetchRestaurants = () => {
+        setLoading(true);
         const params = {};
 
         if (debouncedSearch) params.name = debouncedSearch;
@@ -35,9 +39,11 @@ export default function RestaurantList() {
         getRestaurants(params)
             .then((response) => {
                 setRestaurants(response.data.data || []);
+                setLoading(false);
             })
             .catch((err) => {
                 setError(err.message);
+                setLoading(false);
             });
     };
 
@@ -104,9 +110,13 @@ export default function RestaurantList() {
             <h2 className="font-semibold text-xl mb-3">Restauracje</h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-14 mb-8">
-                {restaurants.map((restaurant) => (
-                    <RestaurantBox key={restaurant.id} restaurant={restaurant} />
-                ))}
+                {loading
+                    ? Array(6)
+                        .fill(null)
+                        .map((_, index) => <Placeholder key={index} />)
+                    : restaurants.map((restaurant) => (
+                        <RestaurantBox key={restaurant.id} restaurant={restaurant} />
+                    ))}
             </div>
         </div>
     );

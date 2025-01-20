@@ -9,7 +9,6 @@ html {
 .banner-img {
     position: relative;
     background-position: center;
-    background-image: url("/");
     background-size: cover;
     background-repeat: no-repeat;
     height: 460px;
@@ -24,3 +23,15 @@ html {
     background: rgba(0, 0, 0, 0.6);
 }
 
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.animate-pulse {
+    animation: pulse 1.5s infinite;
+}
