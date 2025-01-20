@@ -1,7 +1,7 @@
-import React from 'react';
-import { logout as apiLogout } from '../services/api';
+import {logout as apiLogout} from "../services/api";
+import React from "react";
 
-export default function Logout() {
+export default function Logout({ customClass }) {
     const handleLogout = async (e) => {
         e.preventDefault();
         try {
@@ -17,7 +17,7 @@ export default function Logout() {
         <a
             href="#"
             onClick={handleLogout}
-            className="hover:text-red-400"
+            className={`hover:text-red-400 ${customClass}`}
         >
             <i className="fa-solid fa-power-off md:me-1 text-2xl md:text-xs"></i>
             <span className="hidden md:inline">Wyloguj</span>

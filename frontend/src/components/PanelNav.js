@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Logout from "./Logout";
 
 function PanelNav({ isAdmin }) {
     return (
@@ -29,14 +30,7 @@ function PanelNav({ isAdmin }) {
             )}
 
             <li className="m-0">
-                <Link
-                    to="/logout"
-                    className="flex items-center gap-1 text-red-600 px-3 py-1 font-medium hover:bg-brandRed"
-                    title="Wyloguj się"
-                >
-                    <i className="fa-solid fa-right-from-bracket"></i>
-                    Wyloguj się
-                </Link>
+                <Logout customClass="flex items-center gap-1 text-red-600 px-3 py-1 font-medium hover:bg-brandRed"/>
             </li>
         </ul>
     );
