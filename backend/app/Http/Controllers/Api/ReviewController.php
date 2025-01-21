@@ -19,9 +19,7 @@ class ReviewController extends Controller
         Gate::authorize('viewAny', Review::class);
         $reviews = $restaurant->reviews()->latest();
 
-        return ReviewResource::collection(
-            $reviews->paginate()
-        );
+        return ReviewResource::collection($reviews->get());
     }
 
     /**
@@ -59,14 +57,6 @@ class ReviewController extends Controller
     {
         Gate::authorize('view', $review);
         return new ReviewResource($review);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
     }
 
     /**
