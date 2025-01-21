@@ -95,8 +95,6 @@ class RestaurantController extends Controller
      */
     public function store(StoreRestaurantRequest $request)
     {
-        Gate::authorize('create', Restaurant::class);
-
         $validatedData = $request->validated();
 
         $address = Address::create($validatedData['address']);
@@ -166,8 +164,6 @@ class RestaurantController extends Controller
 
     public function update(UpdateRestaurantRequest $request, Restaurant $restaurant)
     {
-        Gate::authorize('update', $restaurant);
-
         $validatedData = $request->validated();
 
         $restaurant->update([

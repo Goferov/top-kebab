@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Restaurant;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreRestaurantRequest extends FormRequest
@@ -11,7 +12,7 @@ class StoreRestaurantRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user()?->can('create', Restaurant::class);
     }
 
     /**

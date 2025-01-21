@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Restaurant;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateRestaurantRequest extends FormRequest
@@ -11,7 +12,8 @@ class UpdateRestaurantRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        $restaurant = $this->route('restaurant'); 
+        return $this->user()?->can('update', $restaurant);
     }
 
     /**
