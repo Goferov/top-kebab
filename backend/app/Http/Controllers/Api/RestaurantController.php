@@ -45,12 +45,12 @@ class RestaurantController extends Controller
     {
         if ($city = $request->input('city')) {
             $query->whereHas('address', function ($q) use ($city) {
-                $q->where('city', 'LIKE', "%{$city}%");
+                $q->whereRaw('LOWER(city) LIKE ?', ['%' . strtolower($city) . '%']);
             });
         }
 
         if ($name = $request->input('name')) {
-            $query->where('name', 'LIKE', "%{$name}%");
+            $query->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($name) . '%']);
         }
 
         if ($request->has('publicate')) {
