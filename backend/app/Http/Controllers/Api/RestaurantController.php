@@ -169,9 +169,15 @@ class RestaurantController extends Controller
     public function show(Restaurant $restaurant)
     {
         Gate::authorize('view', $restaurant);
-        return new RestaurantResource($restaurant->load(['address', 'reviews.user']));
-    }
 
+        $cacheKey = "restaurant:{$restaurant->id}";
+
+        $restaurantDetails = Cache::remember($cacheKey, 3600, function () use ($restaurant) {
+            return $restaurant->load(['address', 'reviews.user']);
+        });
+
+        return new RestaurantResource($restaurantDetails);
+    }
 
 
     public function update(Request $request, Restaurant $restaurant)
