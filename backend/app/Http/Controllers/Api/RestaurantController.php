@@ -8,9 +8,9 @@ use App\Http\Requests\UpdateRestaurantRequest;
 use App\Http\Resources\RestaurantResource;
 use App\Models\Address;
 use App\Models\Restaurant;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 class RestaurantController extends Controller
@@ -18,9 +18,12 @@ class RestaurantController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+    use AuthorizesRequests;
+
     public function index(Request $request)
     {
-        Gate::authorize('viewAny', Restaurant::class);
+        $this->authorize('viewAny', Restaurant::class);
 
         $cacheKey = $this->generateCacheKey($request->all());
 
@@ -150,7 +153,7 @@ class RestaurantController extends Controller
      */
     public function show(Restaurant $restaurant)
     {
-        Gate::authorize('view', $restaurant);
+        $this->authorize('view', $restaurant);
 
         $cacheKey = "restaurant:{$restaurant->id}";
 
@@ -188,7 +191,7 @@ class RestaurantController extends Controller
      */
     public function destroy(Restaurant $restaurant)
     {
-        Gate::authorize('delete', $restaurant);
+        $this->authorize('delete', $restaurant);
 
         $restaurant->reviews()->delete();
 
@@ -203,7 +206,7 @@ class RestaurantController extends Controller
 
     public function togglePublish(Restaurant $restaurant)
     {
-        Gate::authorize('togglePublish', $restaurant);
+        $this->authorize('togglePublish', $restaurant);
 
         $restaurant->publicate = !$restaurant->publicate;
         $restaurant->save();
