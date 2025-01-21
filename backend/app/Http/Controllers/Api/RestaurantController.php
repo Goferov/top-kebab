@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreRestaurantRequest;
+use App\Http\Requests\UpdateRestaurantRequest;
 use App\Http\Resources\RestaurantResource;
 use App\Models\Address;
 use App\Models\Restaurant;
@@ -91,31 +93,13 @@ class RestaurantController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreRestaurantRequest $request)
     {
         Gate::authorize('create', Restaurant::class);
 
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'image' => 'nullable|string',
-            'email' => 'nullable|email|max:255',
-            'website' => 'nullable|url|max:255',
-            'phone' => 'nullable|string|max:16',
-            'address.street' => 'required|string|max:255',
-            'address.city' => 'required|string|max:255',
-            'address.postal_code' => 'required|string|max:20',
-            'address.house_no' => 'required|string|max:10',
-            'address.apartment_no' => 'nullable|string|max:10',
-        ]);
+        $validatedData = $request->validated();
 
-        $address = Address::create([
-            'street' => $validatedData['address']['street'],
-            'city' => $validatedData['address']['city'],
-            'postal_code' => $validatedData['address']['postal_code'],
-            'house_no' => $validatedData['address']['house_no'],
-            'apartment_no' => $validatedData['address']['apartment_no'] ?? null,
-        ]);
+        $address = Address::create($validatedData['address']);
 
         $restaurant = new Restaurant([
             'name' => $validatedData['name'],
@@ -180,24 +164,11 @@ class RestaurantController extends Controller
     }
 
 
-    public function update(Request $request, Restaurant $restaurant)
+    public function update(UpdateRestaurantRequest $request, Restaurant $restaurant)
     {
         Gate::authorize('update', $restaurant);
 
-        $validatedData = $request->validate([
-            'name' => 'sometimes|string|max:255',
-            'description' => 'nullable|string',
-            'image' => 'nullable|string',
-            'email' => 'nullable|email|max:255',
-            'website' => 'nullable|url|max:255',
-            'phone' => 'nullable|string|max:16',
-            'address.street' => 'sometimes|string|max:255',
-            'address.city' => 'sometimes|string|max:255',
-            'address.postal_code' => 'sometimes|string|max:20',
-            'address.house_no' => 'sometimes|string|max:10',
-            'address.apartment_no' => 'nullable|string|max:10',
-            'delete_file' => 'nullable|boolean',
-        ]);
+        $validatedData = $request->validated();
 
         $restaurant->update([
             'name' => $validatedData['name'],
@@ -208,13 +179,7 @@ class RestaurantController extends Controller
             'phone' => $validatedData['phone'] ?? null,
         ]);
 
-        $restaurant->address?->update([
-            'street' => $validatedData['address']['street'] ?? $restaurant->address->street,
-            'city' => $validatedData['address']['city'] ?? $restaurant->address->city,
-            'postal_code' => $validatedData['address']['postal_code'] ?? $restaurant->address->postal_code,
-            'house_no' => $validatedData['address']['house_no'] ?? $restaurant->address->house_no,
-            'apartment_no' => $validatedData['address']['apartment_no'] ?? $restaurant->address->apartment_no,
-        ]);
+        $restaurant->address?->update($validatedData['address'] ?? []);
 
         $this->invalidateCache();
 
