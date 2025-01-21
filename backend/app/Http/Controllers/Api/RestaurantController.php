@@ -7,6 +7,7 @@ use App\Http\Resources\RestaurantResource;
 use App\Models\Address;
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
@@ -19,20 +20,25 @@ class RestaurantController extends Controller
     {
         Gate::authorize('viewAny', Restaurant::class);
 
-        $query = Restaurant::with(['address', 'reviews']);
+        $cacheKey = $this->generateCacheKey($request->all());
 
-        $this->applyFilters($query, $request);
+        $restaurants = Cache::remember($cacheKey, 3600, function () use ($request) {
+            $query = Restaurant::with(['address', 'reviews']);
 
-        $this->applySorting($query, $request);
+            $this->applyFilters($query, $request);
+            $this->applySorting($query, $request);
+            $this->applyLimit($query, $request);
 
-        $this->applyLimit($query, $request);
-
-        $limit = $request->input('limit', 50);
-        $query->limit($limit);
-
-        $restaurants = $query->get();
+            return $query->get();
+        });
 
         return RestaurantResource::collection($restaurants);
+    }
+
+    private function generateCacheKey(array $params)
+    {
+        ksort($params);
+        return 'restaurants:' . http_build_query($params);
     }
 
     private function applyFilters($query, Request $request)
@@ -48,16 +54,14 @@ class RestaurantController extends Controller
         }
 
         if ($request->has('publicate')) {
-            $publicateParam = $request->input('publicate');
-            $publicate = $publicateParam === 'true' ? true : false;
-            $query->where('publicate', $publicate);
+            $query->where('publicate', $request->boolean('publicate'));
         }
     }
 
-    private function applyLimit($query, Request $request) {
+    private function applyLimit($query, Request $request)
+    {
         if ($request->has('limit')) {
-            $limit = (int)$request->input('limit');
-            $query->limit($limit);
+            $query->limit((int)$request->input('limit'));
         }
     }
 
@@ -74,16 +78,13 @@ class RestaurantController extends Controller
                 $query->orderBy('name', 'desc');
                 break;
             case 5:
-                $query->withAvg('reviews', 'rate')
-                    ->orderBy('reviews_avg_rate', 'desc');
+                $query->withAvg('reviews', 'rate')->orderBy('reviews_avg_rate', 'desc');
                 break;
             case 6:
-                $query->withAvg('reviews', 'rate')
-                    ->orderBy('reviews_avg_rate', 'asc');
+                $query->withAvg('reviews', 'rate')->orderBy('reviews_avg_rate', 'asc');
                 break;
             default:
                 $query->orderBy('created_at', 'desc');
-                break;
         }
     }
 
@@ -119,7 +120,7 @@ class RestaurantController extends Controller
         $restaurant = new Restaurant([
             'name' => $validatedData['name'],
             'description' => $validatedData['description'] ?? null,
-            'image' => $this->handleImage(null, $validatedData['image'] ?? null), // Obsługa obrazu
+            'image' => $this->handleImage(null, $validatedData['image'] ?? null),
             'email' => $validatedData['email'] ?? null,
             'website' => $validatedData['website'] ?? null,
             'phone' => $validatedData['phone'] ?? null,
@@ -129,32 +130,36 @@ class RestaurantController extends Controller
 
         $restaurant->save();
 
+        $this->invalidateCache();
+
         return new RestaurantResource($restaurant->load('address'));
     }
 
 
     private function handleImage($restaurant, $imageData = null, $deleteFile = false)
     {
-        if ($deleteFile && $restaurant->image) {
-            if (Storage::disk('public')->exists("uploads/{$restaurant->image}")) {
-                Storage::disk('public')->delete("uploads/{$restaurant->image}");
-            }
+        if ($deleteFile && $restaurant?->image) {
+            Storage::disk('public')->delete("uploads/{$restaurant->image}");
             return null;
         }
 
         if ($imageData) {
             $fileName = time() . '_image.png';
-
             Storage::disk('public')->put("uploads/{$fileName}", base64_decode($imageData));
 
-            if ($restaurant && $restaurant->image && Storage::disk('public')->exists("uploads/{$restaurant->image}")) {
+            if ($restaurant?->image) {
                 Storage::disk('public')->delete("uploads/{$restaurant->image}");
             }
 
             return $fileName;
         }
 
-        return $restaurant->image ?? null;
+        return $restaurant?->image;
+    }
+
+    private function invalidateCache()
+    {
+        Cache::flush();
     }
 
 
@@ -176,7 +181,7 @@ class RestaurantController extends Controller
         $validatedData = $request->validate([
             'name' => 'sometimes|string|max:255',
             'description' => 'nullable|string',
-            'image' => 'nullable|string', // Obsługa obrazu w Base64
+            'image' => 'nullable|string',
             'email' => 'nullable|email|max:255',
             'website' => 'nullable|url|max:255',
             'phone' => 'nullable|string|max:16',
@@ -197,20 +202,18 @@ class RestaurantController extends Controller
             'phone' => $validatedData['phone'] ?? null,
         ]);
 
-        if ($restaurant->address) {
-            $restaurant->address->update([
-                'street' => $validatedData['address']['street'] ?? $restaurant->address->street,
-                'city' => $validatedData['address']['city'] ?? $restaurant->address->city,
-                'postal_code' => $validatedData['address']['postal_code'] ?? $restaurant->address->postal_code,
-                'house_no' => $validatedData['address']['house_no'] ?? $restaurant->address->house_no,
-                'apartment_no' => $validatedData['address']['apartment_no'] ?? $restaurant->address->apartment_no,
-            ]);
-        }
+        $restaurant->address?->update([
+            'street' => $validatedData['address']['street'] ?? $restaurant->address->street,
+            'city' => $validatedData['address']['city'] ?? $restaurant->address->city,
+            'postal_code' => $validatedData['address']['postal_code'] ?? $restaurant->address->postal_code,
+            'house_no' => $validatedData['address']['house_no'] ?? $restaurant->address->house_no,
+            'apartment_no' => $validatedData['address']['apartment_no'] ?? $restaurant->address->apartment_no,
+        ]);
+
+        $this->invalidateCache();
 
         return new RestaurantResource($restaurant->load('address'));
     }
-
-
 
 
     /**
@@ -222,11 +225,12 @@ class RestaurantController extends Controller
 
         $restaurant->reviews()->delete();
 
-        if ($restaurant->address) {
-            $restaurant->address->delete();
-        }
-
+        $restaurant->reviews()->delete();
+        $restaurant->address?->delete();
         $restaurant->delete();
+
+        $this->invalidateCache();
+
         return response(status: 204);
     }
 
@@ -237,11 +241,13 @@ class RestaurantController extends Controller
         $restaurant->publicate = !$restaurant->publicate;
         $restaurant->save();
 
+        $this->invalidateCache();
+
         $status = $restaurant->publicate ? 'published' : 'unpublished';
 
         return response()->json([
             'message' => "Restaurant {$status} successfully.",
-            'restaurant' => new RestaurantResource($restaurant)
-        ], 200);
+            'restaurant' => new RestaurantResource($restaurant),
+        ]);
     }
 }
