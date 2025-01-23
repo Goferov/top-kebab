@@ -4,7 +4,7 @@ import { login } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 
 export default function LoginModal() {
-    const { closeModal } = useModal();
+    const { closeModal, openModal, setLoginMessage, loginMessage  } = useModal();
     const navigate = useNavigate();
     const [loginForm, setLoginForm] = useState({ email: '', password: '' });
     const [loginError, setLoginError] = useState('');
@@ -16,6 +16,7 @@ export default function LoginModal() {
     const handleLoginSubmit = async (e) => {
         e.preventDefault();
         setLoginError('');
+        setLoginMessage('');
 
         if (!loginForm.email || !loginForm.password) {
             setLoginError('Fill in all fields.');
@@ -31,6 +32,7 @@ export default function LoginModal() {
             closeModal();
             setLoginForm({ email: '', password: '' });
             navigate('/panel');
+
         } catch (err) {
             setLoginError(err.response?.data?.message || 'Incorrect login data');
         }
@@ -48,6 +50,11 @@ export default function LoginModal() {
                 <h2 className="text-4xl font-bold mb-4 text-center">Logging</h2>
                 {loginError && (
                     <p className="text-red-500 font-semibold mb-3">{loginError}</p>
+                )}
+                {loginMessage && (
+                    <p className="text-green-500 font-semibold mb-3">
+                        {loginMessage}
+                    </p>
                 )}
                 <form onSubmit={handleLoginSubmit}>
                     <div className="mb-4">
@@ -86,6 +93,15 @@ export default function LoginModal() {
                         </button>
                     </div>
                 </form>
+                <div className="mt-4 text-center">
+                    Don't have an account?
+                    <button
+                        className="text-brandRed ml-1 font-bold hover:underline"
+                        onClick={() => openModal('register')}
+                    >
+                        Register
+                    </button>
+                </div>
             </div>
         </div>
     );

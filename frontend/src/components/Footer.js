@@ -4,6 +4,80 @@ import { login, register } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 
 export default function Footer() {
+    const token = localStorage.getItem('token');
+    const navigate = useNavigate();
+    const { modalType, openModal, closeModal } = useModal();
+    const [loginForm, setLoginForm] = useState({ email: '', password: '' });
+    const [loginError, setLoginError] = useState('');
+    const [loginMessage, setLoginMessage] = useState('');
+    const [registerForm, setRegisterForm] = useState({
+        name: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+    });
+    const [registerError, setRegisterError] = useState('');
+
+    const handleLoginChange = (e) => {
+        setLoginForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    };
+
+    const handleLoginSubmit = async (e) => {
+        e.preventDefault();
+        setLoginError('');
+
+        if (!loginForm.email || !loginForm.password) {
+            setLoginError('Fill in all fields.');
+            return;
+        }
+
+        try {
+            const response = await login({
+                email: loginForm.email,
+                password: loginForm.password,
+            });
+            localStorage.setItem('token', response.data.token);
+            closeModal();
+            setLoginForm({ email: '', password: '' });
+            navigate('/panel');
+        } catch (err) {
+            setLoginError(err.response?.data?.message || 'Incorrect login data');
+        }
+    };
+
+    const handleRegisterChange = (e) => {
+        setRegisterForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    };
+
+    const handleRegisterSubmit = async (e) => {
+        e.preventDefault();
+        setRegisterError('');
+
+        if (!registerForm.name || !registerForm.email || !registerForm.password) {
+            setRegisterError('Fill in all fields.');
+            return;
+        }
+        if (registerForm.password !== registerForm.confirmPassword) {
+            setRegisterError('Passwords are not the same.');
+            return;
+        }
+
+        try {
+            await register({
+                name: registerForm.name,
+                email: registerForm.email,
+                password: registerForm.password,
+                password_confirmation: registerForm.confirmPassword,
+            });
+            closeModal();
+            setRegisterForm({ name: '', email: '', password: '', confirmPassword: '' });
+            setLoginMessage('You have been successfully registered. You may log in.');
+            openModal('login');
+        } catch (err) {
+            setRegisterError(err.response?.data?.message || 'Registration error');
+        }
+    };
+
     return (
         <>
             <footer className="text-white">

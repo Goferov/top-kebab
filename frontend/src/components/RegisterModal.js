@@ -3,7 +3,7 @@ import { useModal } from '../services/modal';
 import { register } from '../services/api';
 
 export default function RegisterModal() {
-    const { closeModal, openModal } = useModal();
+    const { closeModal, openModal, setLoginMessage } = useModal();
     const [registerForm, setRegisterForm] = useState({
         name: '',
         email: '',
@@ -36,6 +36,7 @@ export default function RegisterModal() {
                 password: registerForm.password,
                 password_confirmation: registerForm.confirmPassword,
             });
+            setLoginMessage('You have been successfully registered. You may log in.');
             closeModal();
             openModal('login');
         } catch (err) {
@@ -113,6 +114,14 @@ export default function RegisterModal() {
                         </button>
                     </div>
                 </form>
+                <div className="mt-4 text-center">
+                    <button
+                        className="text-brandRed font-bold hover:underline"
+                        onClick={() => openModal('login')}
+                    >
+                        Already have an account? Log in
+                    </button>
+                </div>
             </div>
         </div>
     );
