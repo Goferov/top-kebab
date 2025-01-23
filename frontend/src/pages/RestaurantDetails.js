@@ -82,7 +82,7 @@ function RestaurantDetails() {
 
             const totalReviews = restaurant.reviews.length + 1;
             const totalRating = restaurant.reviews.reduce((sum, r) => sum + r.rate, 0) + rateValue;
-            const newAverageRate = (totalRating / totalReviews).toFixed(2);
+            const newAverageRate = (totalRating / totalReviews).toFixed(1);
 
             setRestaurant((prev) => ({
                 ...prev,
