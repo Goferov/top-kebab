@@ -2,10 +2,12 @@ import React from 'react';
 import { useState } from "react";
 import { useModal } from '../services/modal';
 import Logout from "./Logout";
+import LoginModal from './LoginModal';
+import RegisterModal from './RegisterModal';
 
 function Header() {
     const [isMenuOpen, setMenuOpen] = useState(false);
-    const { openModal } = useModal();
+    const { openModal, modalType } = useModal();
     const token = localStorage.getItem('token');
 
     return (
@@ -111,6 +113,8 @@ function Header() {
                     </div>
                 </nav>
             </div>
+            {modalType === 'login' && <LoginModal />}
+            {modalType === 'register' && <RegisterModal />}
         </header>
     );
 }
