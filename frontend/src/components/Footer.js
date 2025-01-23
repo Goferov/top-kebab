@@ -27,7 +27,7 @@ export default function Footer() {
         setLoginError('');
 
         if (!loginForm.email || !loginForm.password) {
-            setLoginError('Wypełnij wszystkie pola.');
+            setLoginError('Fill in all fields.');
             return;
         }
 
@@ -42,7 +42,7 @@ export default function Footer() {
             navigate('/panel');
 
         } catch (err) {
-            setLoginError(err.response?.data?.message || 'Nieprawidłowe dane logowania');
+            setLoginError(err.response?.data?.message || 'Incorrect login data');
         }
     };
 
@@ -55,11 +55,11 @@ export default function Footer() {
         setRegisterError('');
 
         if (!registerForm.name || !registerForm.email || !registerForm.password) {
-            setRegisterError('Wypełnij wszystkie pola.');
+            setRegisterError('Fill in all fields.');
             return;
         }
         if (registerForm.password !== registerForm.confirmPassword) {
-            setRegisterError('Hasła nie są takie same.');
+            setRegisterError('Passwords are not the same.');
             return;
         }
 
@@ -72,10 +72,10 @@ export default function Footer() {
             });
             closeModal();
             setRegisterForm({ name: '', email: '', password: '', confirmPassword: '' });
-            setLoginMessage('Zostałeś pomyślnie zarejestrowany. Możesz się zalogować.');
+            setLoginMessage('You have been successfully registered. You may log in.');
             openModal('login');
         } catch (err) {
-            setRegisterError(err.response?.data?.message || 'Błąd rejestracji');
+            setRegisterError(err.response?.data?.message || 'Registration error');
         }
     };
 
@@ -89,11 +89,11 @@ export default function Footer() {
                                 <img src="/logo-white.svg" alt="TopKebab logo" />
                             </a>
                             <p className="max-w-72">
-                                TopKebab to nie tylko portal, to miejsce spotkań dla smakoszy kebaba. TopKebab to zespół pasjonatów, którzy dbają o to, aby każdy kebab, który znajduje się na naszej stronie, był godny uwagi.
+                                TopKebab is not just a portal, it's a meeting place for gourmet kebabs. TopKebab is a team of passionate people who make sure that every kebab featured on our site is worthy of the attention.
                             </p>
                         </div>
                         <div>
-                            <h6 className="uppercase mb-3 font-bold">Kontakt</h6>
+                            <h6 className="uppercase mb-3 font-bold">Contact</h6>
                             <ul className="list-none relative ps-4">
                                 <div className="absolute left-0 bottom-0 top-0 h-100 w-1 bg-brandRedLight"></div>
                                 <li>
@@ -102,8 +102,8 @@ export default function Footer() {
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="mailto:redakcja@topkebab.pl" className="hover:text-red-400 flex items-center">
-                                        <i className="fa-solid fa-envelope me-2"></i> redakcja@topkebab.pl
+                                    <a href="mailto:office@topkebab.pl" className="hover:text-red-400 flex items-center">
+                                        <i className="fa-solid fa-envelope me-2"></i> office@topkebab.pl
                                     </a>
                                 </li>
                             </ul>
@@ -116,10 +116,10 @@ export default function Footer() {
                                     <a href="/">Home</a>
                                 </li>
                                 <li className="hover:text-red-400">
-                                    <a href="/restaurant">Restauracje</a>
+                                    <a href="/restaurant">Restaurants</a>
                                 </li>
                                 <li className="hover:text-red-400">
-                                    <a href="/contact">Kontakt</a>
+                                    <a href="/contact">Contact</a>
                                 </li>
                             </ul>
                         </div>
@@ -127,9 +127,9 @@ export default function Footer() {
                 </div>
                 <div className="bg-brandBlack">
                     <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-4 py-1 text-xs text-center md:text-start">
-                        <div>TOPKEBAB &copy; {new Date().getFullYear()} Wszelkie prawa zastrzeżone.</div>
+                        <div>TOPKEBAB &copy; {new Date().getFullYear()} All rights reserved.</div>
                         <div className="hidden md:block"></div>
-                        <div className="md:text-end">Realizacja: Marcin Godfryd</div>
+                        <div className="md:text-end">Realisation: Marcin Godfryd</div>
                     </div>
                 </div>
             </footer>
@@ -147,7 +147,7 @@ export default function Footer() {
                                 className="bg-white rounded-2xl shadow-lg w-11/12 max-w-md p-5"
                                 onClick={(e) => e.stopPropagation()}
                             >
-                                <h2 className="text-4xl font-bold mb-4 text-center">Logowanie</h2>
+                                <h2 className="text-4xl font-bold mb-4 text-center">Logging</h2>
                                 {loginError && (
                                     <p className="text-red-500 font-semibold mb-3">
                                         {loginError}
@@ -175,7 +175,7 @@ export default function Footer() {
                                             name="password"
                                             type="password"
                                             className="w-full border-black border rounded-2xl shadow-sm px-3 py-3"
-                                            placeholder="Hasło"
+                                            placeholder="Password"
                                             value={loginForm.password}
                                             onChange={handleLoginChange}
                                         />
@@ -185,24 +185,24 @@ export default function Footer() {
                                             type="submit"
                                             className="bg-brandRed text-white py-2 px-4 rounded-2xl w-full hover:bg-red-500"
                                         >
-                                            Zaloguj się
+                                            Log in
                                         </button>
                                         <button
                                             type="button"
                                             className="text-gray-500 mt-3 hover:text-gray-700"
                                             onClick={closeModal}
                                         >
-                                            Zamknij
+                                            Close
                                         </button>
                                     </div>
                                 </form>
                                 <div className="mt-4 text-center">
-                                    Nie masz konta?
+                                    Don't have an account?
                                     <button
                                         className="text-brandRed ml-1 font-bold hover:underline"
                                         onClick={() => openModal('register')}
                                     >
-                                        Zarejestruj się
+                                        Register
                                     </button>
                                 </div>
                             </div>
@@ -219,7 +219,7 @@ export default function Footer() {
                                 onClick={(e) => e.stopPropagation()}
                             >
                                 <h2 className="text-4xl font-bold mb-4 text-center">
-                                    Rejestracja
+                                    Registration
                                 </h2>
                                 {registerError && (
                                     <p className="text-red-500 font-semibold mb-3">
@@ -232,7 +232,7 @@ export default function Footer() {
                                             name="name"
                                             type="text"
                                             className="w-full border-black border rounded-2xl shadow-sm px-3 py-3"
-                                            placeholder="Nazwa"
+                                            placeholder="Name"
                                             value={registerForm.name}
                                             onChange={handleRegisterChange}
                                         />
@@ -252,7 +252,7 @@ export default function Footer() {
                                             name="password"
                                             type="password"
                                             className="w-full border-black border rounded-2xl shadow-sm px-3 py-3"
-                                            placeholder="Hasło"
+                                            placeholder="Password"
                                             value={registerForm.password}
                                             onChange={handleRegisterChange}
                                         />
@@ -262,7 +262,7 @@ export default function Footer() {
                                             name="confirmPassword"
                                             type="password"
                                             className="w-full border-black border rounded-2xl shadow-sm px-3 py-3"
-                                            placeholder="Powtórz hasło"
+                                            placeholder="Repeat password"
                                             value={registerForm.confirmPassword}
                                             onChange={handleRegisterChange}
                                         />
@@ -272,14 +272,14 @@ export default function Footer() {
                                             type="submit"
                                             className="bg-brandRed text-white py-2 px-4 rounded-2xl w-full hover:bg-red-500"
                                         >
-                                            Zarejestruj się
+                                            Register
                                         </button>
                                         <button
                                             type="button"
                                             className="text-gray-500 mt-3 hover:text-gray-700"
                                             onClick={closeModal}
                                         >
-                                            Zamknij
+                                            Close
                                         </button>
                                     </div>
                                 </form>
@@ -288,7 +288,7 @@ export default function Footer() {
                                         className="text-brandRed font-bold hover:underline"
                                         onClick={() => openModal('login')}
                                     >
-                                        Masz już konto? Zaloguj się
+                                        Already have an account? Log in
                                     </button>
                                 </div>
                             </div>

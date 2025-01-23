@@ -18,7 +18,7 @@ api.interceptors.response.use(
     (response) => response,
     (error) => {
         if (error.response && error.response.status === 401) {
-            console.warn('Token wygasł lub jest nieważny. Wylogowywanie...');
+            console.warn('Token has expired or is invalid. Logout...');
             localStorage.removeItem('token');
             window.location.href = '/';
         }

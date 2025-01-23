@@ -9,10 +9,10 @@ function PanelNav({ isAdmin }) {
                 <Link
                     to="/panel"
                     className="flex items-center gap-1 px-3 py-1 hover:bg-brandRed border-b border-black"
-                    title="Zmiana hasła"
+                    title="Password change"
                 >
                     <i className="fa-solid fa-key"></i>
-                    Zmiana hasła
+                    Password change
                 </Link>
             </li>
 
@@ -21,10 +21,10 @@ function PanelNav({ isAdmin }) {
                     <Link
                         to="/restaurantList"
                         className="flex items-center gap-1 px-3 py-1 hover:bg-brandRed border-b border-black"
-                        title="Lista restauracji"
+                        title="List of restaurants"
                     >
                         <i className="fa-solid fa-list"></i>
-                        Lista restauracji
+                        List of restaurants
                     </Link>
                 </li>
             )}

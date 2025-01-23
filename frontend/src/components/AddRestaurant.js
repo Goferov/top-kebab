@@ -39,7 +39,7 @@ function AddRestaurantPage() {
             .then((res) => {
                 setLoading(false);
                 if (!res.data) {
-                    setMessages(['Nie znaleziono restauracji.']);
+                    setMessages(['No restaurant found.']);
                     return;
                 }
                 const r = res.data.data;
@@ -61,7 +61,7 @@ function AddRestaurantPage() {
             })
             .catch((err) => {
                 setLoading(false);
-                setMessages([`Błąd: ${err.message}`]);
+                setMessages([`Error: ${err.message}`]);
             });
     }, [id]);
 
@@ -81,12 +81,12 @@ function AddRestaurantPage() {
         const maxFileSize = 2 * 1024 * 1024; // 2 MB
 
         if (!validTypes.includes(file.type)) {
-            setMessages(['Plik musi być obrazem w formacie JPG, PNG lub GIF.']);
+            setMessages(['The file must be an image in JPG, PNG or GIF format.']);
             return;
         }
 
         if (file.size > maxFileSize) {
-            setMessages(['Plik jest za duży. Maksymalny rozmiar to 2 MB.']);
+            setMessages(['The file is too large. The maximum size is 2 MB.']);
             return;
         }
 
@@ -128,11 +128,11 @@ function AddRestaurantPage() {
             if (!id) {
                 response = await saveRestaurant(jsonData);
                 const newId = response.data.data.id;
-                setSuccess('Dodano nową restaurację!');
+                setSuccess('New restaurant added!');
                 navigate(`/addRestaurant/${newId}`);
             } else {
                 response = await updateRestaurant(id, jsonData);
-                setSuccess('Zapisano zmiany w restauracji!');
+                setSuccess('Changes in the restaurant have been saved!');
             }
 
             setForm({
@@ -157,7 +157,7 @@ function AddRestaurantPage() {
     return (
         <div className="container mx-auto mt-6">
             <h1 className="text-2xl font-bold mb-4">
-                {!id ? 'Dodaj restaurację' : 'Edytuj restaurację'}
+                {!id ? 'Add a restaurant' : 'Edit the restaurant'}
             </h1>
 
             {messages.map((msg, i) => (
@@ -180,7 +180,7 @@ function AddRestaurantPage() {
                 <div>
                     <input
                         className="border border-black py-2 px-3 w-full rounded-2xl"
-                        placeholder="Nazwa*"
+                        placeholder="Name*"
                         type="text"
                         name="name"
                         required
@@ -203,7 +203,7 @@ function AddRestaurantPage() {
                 <div>
                     <input
                         className="border border-black py-2 px-3 w-full rounded-2xl"
-                        placeholder="Telefon"
+                        placeholder="Phone"
                         type="text"
                         name="phone"
                         value={form.phone}
@@ -214,7 +214,7 @@ function AddRestaurantPage() {
                 <div>
                     <input
                         className="border border-black py-2 px-3 w-full rounded-2xl"
-                        placeholder="Strona internetowa"
+                        placeholder="Website"
                         type="url"
                         name="website"
                         value={form.website}
@@ -227,7 +227,7 @@ function AddRestaurantPage() {
               className="border border-black py-2 px-3 w-full rounded-2xl"
               name="description"
               rows={5}
-              placeholder="Opis"
+              placeholder="Description"
               value={form.description}
               onChange={handleChange}
           />
@@ -256,7 +256,7 @@ function AddRestaurantPage() {
                                     checked={form.delete_file}
                                     onChange={handleChange}
                                 />
-                                Usuń plik
+                                Delete image
                             </label>
                         </div>
                     )}
@@ -264,12 +264,12 @@ function AddRestaurantPage() {
 
                 <hr className="my-4 border-gray-300" />
 
-                <h2 className="text-xl font-semibold">Lokalizacja</h2>
+                <h2 className="text-xl font-semibold">Location</h2>
 
                 <div>
                     <input
                         className="border border-black py-2 px-3 w-full rounded-2xl"
-                        placeholder="Ulica*"
+                        placeholder="Street*"
                         type="text"
                         name="street"
                         required
@@ -281,7 +281,7 @@ function AddRestaurantPage() {
                 <div>
                     <input
                         className="border border-black py-2 px-3 w-full rounded-2xl"
-                        placeholder="Miasto*"
+                        placeholder="City*"
                         type="text"
                         name="city"
                         required
@@ -293,7 +293,7 @@ function AddRestaurantPage() {
                 <div>
                     <input
                         className="border border-black py-2 px-3 w-full rounded-2xl"
-                        placeholder="Kod pocztowy*"
+                        placeholder="Postal Code*"
                         type="text"
                         name="postalCode"
                         required
@@ -305,7 +305,7 @@ function AddRestaurantPage() {
                 <div>
                     <input
                         className="border border-black py-2 px-3 w-full rounded-2xl"
-                        placeholder="Numer budynku*"
+                        placeholder="House no*"
                         type="text"
                         name="houseNo"
                         required
@@ -317,7 +317,7 @@ function AddRestaurantPage() {
                 <div>
                     <input
                         className="border border-black py-2 px-3 w-full rounded-2xl"
-                        placeholder="Numer mieszkania"
+                        placeholder="Apartment no"
                         type="text"
                         name="apartmentNo"
                         value={form.apartmentNo}
@@ -333,7 +333,7 @@ function AddRestaurantPage() {
                     type="submit"
                     className="bg-brandRed rounded-2xl text-white w-full py-2 font-medium text-lg rounded hover:bg-red-700 transition-colors"
                 >
-                    {id ? 'Zapisz' : 'Dodaj'}
+                    {id ? 'Save' : 'Add'}
                 </button>
             </form>
         </div>

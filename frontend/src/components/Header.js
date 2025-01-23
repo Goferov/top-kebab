@@ -16,9 +16,9 @@ function Header() {
                         <a href="tel:+48514343443" className="me-5 ">
                             <i className="fa-solid fa-phone-flip me-1 text-2xl md:text-xs"></i> <span className="hidden md:inline">+48 514 343 443</span>
                         </a>
-                        <a href="mailto:redakcja@topkebab.pl" className="">
+                        <a href="mailto:office@topkebab.pl" className="">
                             <i className="fa-solid fa-envelope md:me-1 text-2xl md:text-xs"></i> <span
-                            className="hidden md:inline">redakcja@topkebab.pl</span>
+                            className="hidden md:inline">office@topkebab.pl</span>
                         </a>
                     </div>
                     <div>
@@ -29,7 +29,7 @@ function Header() {
                                 className="open-modal"
                             >
                                 <i className="fa-solid fa-user md:me-1 text-2xl md:text-xs"></i>
-                                <span className="hidden md:inline">Zaloguj się</span>
+                                <span className="hidden md:inline">Log in</span>
                             </a>
                         ) : (
                             <div className="flex items-center gap-3">
@@ -95,7 +95,7 @@ function Header() {
                                         href="/restaurant"
                                         className="block py-2 px-3 rounded md:hover:text-red-400 md:p-0  "
                                     >
-                                        Restauracje
+                                        Restaurants
                                     </a>
                                 </li>
                                 <li>
@@ -103,7 +103,7 @@ function Header() {
                                         href="/contact"
                                         className="block py-2 px-3 rounded  md:hover:text-red-400  md:p-0  "
                                     >
-                                        Kontakt
+                                        Contact
                                     </a>
                                 </li>
                             </ul>

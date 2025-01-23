@@ -20,7 +20,7 @@ export default function Logout({ customClass }) {
             className={`hover:text-red-400 ${customClass}`}
         >
             <i className="fa-solid fa-power-off md:me-1 text-2xl md:text-xs"></i>
-            <span className="hidden md:inline">Wyloguj</span>
+            <span className="hidden md:inline">Logout</span>
         </a>
     );
 }

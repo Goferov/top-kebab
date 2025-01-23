@@ -5,7 +5,7 @@ const Contact = () => {
         <section className="container my-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="mb-4">
-                    <h1 className="font-semibold text-2xl mb-3">Kontakt</h1>
+                    <h1 className="font-semibold text-2xl mb-3">Contact</h1>
                     <img
                         src="/logo.svg"
                         className="mb-10"
@@ -16,9 +16,9 @@ const Contact = () => {
                             <i className="fa-solid fa-phone-flip me-3 text-2xl"></i>
                             <span>+48 514 343 443</span>
                         </a>
-                        <a href="mailto:redakcja@topkebab.pl" className="block text-2xl">
+                        <a href="mailto:office@topkebab.pl" className="block text-2xl">
                             <i className="fa-solid fa-envelope me-3 text-2xl"></i>
-                            <span>redakcja@topkebab.pl</span>
+                            <span>office@topkebab.pl</span>
                         </a>
                     </div>
                 </div>
@@ -26,23 +26,23 @@ const Contact = () => {
                     <h2 className="font-semibold text-2xl mb-3">O nas</h2>
                     <div className="text-lg">
                         <p className="mb-2">
-                            Witaj w TopKebab – Twoim przewodniku po świecie kebabów! Nasza strona
-                            powstała z myślą o wszystkich miłośnikach tego pysznego dania.
-                            Jesteśmy społecznością, która dzieli się autentycznymi recenzjami i
-                            ocenami kebabów z różnych miejsc w Polsce.
+                            Welcome to TopKebab - your guide to the world of kebabs! Our website
+                            was created with all lovers of this delicious dish in mind.
+                            We are a community that shares authentic reviews and
+                            ratings of kebabs from different places in Poland.
                         </p>
                         <p className="mb-2">
-                            TopKebab to nie tylko portal, to miejsce spotkań dla smakoszy kebaba.
-                            Administratorzy TopKebab to zespół pasjonatów, którzy dbają o to, aby
-                            każdy kebab, który znajduje się na naszej stronie, był godny uwagi.
-                            To dzięki nim, możesz odkrywać, oceniać i komentować kebaby, które
-                            testujesz.
+                            TopKebab is not just a portal, it is a meeting place for gourmet kebabs.
+                            The administrators of TopKebab are a team of passionate people who make sure that
+                            every kebab featured on our site is worthy of attention.
+                            Thanks to them, you can discover, rate and comment on the kebabs you
+                            you test.
                         </p>
                         <p className="mb-2">
-                            Dołącz do nas i pomóż budować największą bazę wiedzy o kebabach w
-                            kraju. Twoje opinie pomogą innym znaleźć kebaby, które zasługują na
-                            miano najlepszych. Czy jesteś gotowy, aby zostać ekspertem od
-                            kebabów? Rozpocznij swoją przygodę z TopKebab już dzisiaj!
+                            Join us and help build the largest kebab knowledge base in the
+                            country. Your feedback will help others find the kebabs that deserve to be
+                            the best. Are you ready to become an expert on
+                            kebabs? Start your adventure with TopKebab today!
                         </p>
                     </div>
                 </div>

@@ -8,7 +8,7 @@ export default function Loader() {
                     <div className="absolute inset-0 border-4 border-gray-300 border-t-transparent rounded-full animate-spin"></div>
                 </div>
                 <p className="text-lg text-gray-700 font-semibold">
-                    Ładowanie...
+                    Loading...
                 </p>
             </div>
         </div>

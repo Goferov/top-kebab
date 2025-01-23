@@ -36,35 +36,35 @@ function AdminRestaurantList() {
                         : restaurant
                 )
             );
-            setMessage(`Status publikacji został zmieniony dla restauracji ID: ${id}`);
+            setMessage(`The publication status has been changed for the restaurant ID: ${id}`);
             setSuccess(true);
         } catch (err) {
-            setMessage(err.response?.data?.message || 'Wystąpił błąd podczas zmiany statusu publikacji.');
+            setMessage(err.response?.data?.message || 'An error occurred while changing the publication status.');
             setSuccess(false);
         }
     };
 
     const handleDelete = async (id) => {
-        if (!window.confirm('Czy na pewno chcesz usunąć tę restaurację?')) {
+        if (!window.confirm('Are you sure you want to delete this restaurant?')) {
             return;
         }
 
         try {
             await deleteRestaurant(id);
             setRestaurants((prev) => prev.filter((restaurant) => restaurant.id !== id));
-            setMessage(`Restauracja ID: ${id} została usunięta.`);
+            setMessage(`Restaurant ID: ${id} has been deleted.`);
             setSuccess(true);
         } catch (err) {
-            setMessage(err.response?.data?.message || 'Wystąpił błąd podczas usuwania restauracji.');
+            setMessage(err.response?.data?.message || 'An error occurred while removing a restaurant.');
             setSuccess(false);
         }
     };
 
-    if (error) return <p>Błąd: {error}</p>;
+    if (error) return <p>Error: {error}</p>;
 
     return (
         <section className="admin-panel container mx-auto mt-6">
-            <h1 className="text-2xl font-bold mb-4">Twoje konto</h1>
+            <h1 className="text-2xl font-bold mb-4">Your account</h1>
 
             <div className="user-panel flex flex-col md:flex-row gap-6">
                 <div className="md:w-1/4">
@@ -83,19 +83,19 @@ function AdminRestaurantList() {
                         <button
                             onClick={handleAddRestaurant}
                             className="bg-red-600 text-white px-4 py-2 rounded font-medium hover:bg-red-700 transition-colors"
-                            title="Dodaj restaurację"
+                            title="Add restaurant"
                         >
-                            Dodaj restaurację
+                            Add restaurant
                         </button>
                     </div>
 
                     <table className="min-w-full border border-gray-300 text-left text-sm">
                         <thead className="bg-gray-100 border-b border-gray-300">
                         <tr>
-                            <th className="py-2 px-3 w-16">L.p.</th>
-                            <th className="py-2 px-3">Zdjęcie</th>
-                            <th className="py-2 px-3">Nazwa</th>
-                            <th className="py-2 px-3 w-32 text-center">Opcje</th>
+                            <th className="py-2 px-3 w-16">No.</th>
+                            <th className="py-2 px-3">Image</th>
+                            <th className="py-2 px-3">Name</th>
+                            <th className="py-2 px-3 w-32 text-center">Options</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -157,7 +157,7 @@ function AdminRestaurantList() {
                                     colSpan={4}
                                     className="py-4 px-3 text-center text-gray-500"
                                 >
-                                    Brak restauracji do wyświetlenia.
+                                    No restaurants to display.
                                 </td>
                             </tr>
                         )}

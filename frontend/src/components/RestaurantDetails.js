@@ -21,7 +21,7 @@ function RestaurantDetails() {
     }, [id]);
 
     if (error) {
-        return <p className="text-red-500">Błąd: {error}</p>;
+        return <p className="text-red-500">Error: {error}</p>;
     }
 
     if (!restaurant) {
@@ -51,13 +51,20 @@ function RestaurantDetails() {
         const reviewText = e.target.review.value.trim();
 
         if (isNaN(rateValue) || rateValue < 1 || rateValue > 5) {
-            setMessage('Ocena musi być liczbą od 1 do 5.');
+            setMessage('The score must be a number between 1 and 5.');
             setSuccess(false);
             return;
         }
 
         if (reviewText.length === 0 || reviewText.length > 250) {
-            setMessage('Treść opinii jest wymagana i nie może przekraczać 250 znaków.');
+            setMessage('The content of the opinion is required and must not exceed 250 characters.');
+            setSuccess(false);
+            return;
+        }
+
+        const token = localStorage.getItem('token');
+        if (!token) {
+            setMessage('You must be logged in to add feedback.');
             setSuccess(false);
             return;
         }
@@ -70,7 +77,7 @@ function RestaurantDetails() {
 
             const newReview = response.data.data;
 
-            setMessage('Opinia została dodana pomyślnie!');
+            setMessage('Opinion added successfully!');
             setSuccess(true);
 
             const totalReviews = restaurant.reviews.length + 1;
@@ -86,9 +93,9 @@ function RestaurantDetails() {
             e.target.reset();
         } catch (err) {
             if (err.response?.status === 401) {
-                setMessage('Musisz być zalogowany, aby dodać opinię.');
+                setMessage('You must be logged in to add feedback.');
             } else {
-                setMessage(err.response?.data?.message || 'Wystąpił błąd podczas dodawania opinii.');
+                setMessage(err.response?.data?.message || 'An error occurred while adding opinions.');
             }
             setSuccess(false);
         }
@@ -96,7 +103,6 @@ function RestaurantDetails() {
 
     return (
         <div className="container my-7">
-            {/* Details Section */}
             <section className="my-3">
                 <div className="flex flex-col md:flex-row gap-10">
                     <div className="md:w-1/3">
@@ -124,7 +130,7 @@ function RestaurantDetails() {
                 </div>
             </section>
             <section className="my-6">
-                <h2 className="font-semibold text-xl mb-3">Opinie użytkowników</h2>
+                <h2 className="font-semibold text-xl mb-3">User reviews</h2>
                 <div className="flex flex-col-reverse md:flex-row gap-10">
                     <div className="md:w-2/3 space-y-3 mb-6">
                         {restaurant.reviews && restaurant.reviews.length > 0 ? (
@@ -142,7 +148,7 @@ function RestaurantDetails() {
                                 </div>
                             ))
                         ) : (
-                            <p className="text-gray-500">Brak opinii do wyświetlenia.</p>
+                            <p className="text-gray-500">No opinions to display.</p>
                         )}
                     </div>
                     <div className="md:w-1/3">
@@ -156,7 +162,7 @@ function RestaurantDetails() {
                                     {message}
                                 </p>
                             )}
-                            <h3 className="font-semibold text-lg mb-3">Dodaj opinię</h3>
+                            <h3 className="font-semibold text-lg mb-3">Add opinion</h3>
                             <div>
                                 <input
                                     className="border border-black px-4 py-2 w-full rounded-2xl mb-4"
@@ -183,7 +189,7 @@ function RestaurantDetails() {
                                 type="submit"
                                 className="bg-brandRed text-white px-4 py-2 rounded-2xl font-medium hover:bg-red-700 transition-colors"
                             >
-                                Dodaj opinie
+                                Add opinions
                             </button>
                         </form>
                     </div>

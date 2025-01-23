@@ -20,7 +20,7 @@ export default function Home() {
             });
     }, []);
 
-    if (error) return <p>Błąd: {error}</p>;
+    if (error) return <p>Error: {error}</p>;
 
     return (
         <main>
@@ -31,15 +31,15 @@ export default function Home() {
                     }}>
                         <div className="banner-overlayer text-white p-9">
                             <h1 className="font-bold uppercase text-2xl md:text-5xl mb-6 md:mb-8 leading-5 md:leading-10 text-center md:text-start">
-                                <span className="block mb-3 md:mb-5">Twoje zdanie</span>
-                                <span className="block">liczy się tutaj!</span>
+                                <span className="block mb-3 md:mb-5">Your opinion</span>
+                                <span className="block">counts here!</span>
                             </h1>
                             <a
                                 href="/restaurant"
                                 className="border-2 border-white rounded-2xl py-2 px-7 text-xl md:text-xl font-semibold hover:bg-brandRed hover:border-brandRed block w-fit mx-auto md:inline-block"
-                                title="Restauracje"
+                                title="Restaurants"
                             >
-                                Restauracje
+                                Restaurants
                             </a>
                         </div>
                     </div>
@@ -47,7 +47,7 @@ export default function Home() {
             </section>
             <section>
                 <div className="container">
-                    <h2 className="font-semibold text-xl mb-3">Najnowsze</h2>
+                    <h2 className="font-semibold text-xl mb-3">Latest</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-14 mb-8">
                         {loading
                             ? Array(3)

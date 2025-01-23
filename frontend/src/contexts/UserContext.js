@@ -16,7 +16,7 @@ export const UserProvider = ({ children }) => {
                     setUser(response.data);
                 }
             } catch (error) {
-                console.error('Błąd pobierania użytkownika:', error);
+                console.error('User download error:', error);
                 localStorage.removeItem('token');
             } finally {
                 setLoading(false);
