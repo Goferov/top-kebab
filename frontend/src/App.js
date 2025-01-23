@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import MainLayout from './layouts/MainLayout';
@@ -16,7 +16,9 @@ import Error404 from "./components/Error404";
 
 function App() {
 
-
+    useEffect(() => {
+        document.title = "Top Kebab";
+    }, []);
     return (
         <UserProvider>
             <ModalProvider>
