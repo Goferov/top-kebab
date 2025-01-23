@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import PanelNav from './PanelNav';
+import PanelNav from '../components/PanelNav';
 import { changePassword } from '../services/api';
 import { useUser } from '../contexts/UserContext';
 

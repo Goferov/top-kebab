@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import PanelNav from './PanelNav';
+import PanelNav from '../components/PanelNav';
 import { getRestaurants, deleteRestaurant, togglePublish } from '../services/api';
 
 function AdminRestaurantList() {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getRestaurants } from '../services/api';
-import RestaurantBox from './RestaurantBox';
-import Placeholder from "./Placeholder";
+import RestaurantBox from '../components/RestaurantBox';
+import Placeholder from "../components/Placeholder";
 
 export default function RestaurantList() {
     const [restaurants, setRestaurants] = useState([]);

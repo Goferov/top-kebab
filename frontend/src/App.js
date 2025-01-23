@@ -3,16 +3,16 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import MainLayout from './layouts/MainLayout';
 import ProtectedRoute from './components/ProtectedRoute';
-import Home from "./components/Home";
-import Contact from "./components/Contact";
-import Panel from "./components/Panel";
+import Home from "./pages/Home";
+import Contact from "./pages/Contact";
+import Panel from "./pages/Panel";
 import { ModalProvider } from './services/modal';
 import { UserProvider} from './contexts/UserContext';
-import RestaurantList from './components/RestaurantList';
-import RestaurantDetails from './components/RestaurantDetails';
-import AdminRestaurantList from "./components/AdminRestaurantList";
-import AddRestaurant from "./components/AddRestaurant";
-import Error404 from "./components/Error404";
+import RestaurantList from './pages/RestaurantList';
+import RestaurantDetails from './pages/RestaurantDetails';
+import AdminRestaurantList from "./pages/AdminRestaurantList";
+import AddRestaurant from "./pages/AddRestaurant";
+import Error404 from "./pages/Error404";
 
 function App() {
 

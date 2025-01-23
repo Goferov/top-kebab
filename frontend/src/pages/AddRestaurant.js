@@ -5,7 +5,7 @@ import {
     saveRestaurant,
     updateRestaurant
 } from '../services/api';
-import Loader from "./Loader";
+import Loader from "../components/Loader";
 
 function AddRestaurantPage() {
     const { id } = useParams();
