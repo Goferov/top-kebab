@@ -10,8 +10,8 @@ use App\Models\Address;
 use App\Models\Restaurant;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
+use App\Helpers\CacheHelper;
 
 class RestaurantController extends Controller
 {
@@ -21,15 +21,21 @@ class RestaurantController extends Controller
 
     use AuthorizesRequests;
 
+    private CacheHelper $cacheHelper;
+
+    public function __construct(CacheHelper $cacheHelper)
+    {
+        $this->cacheHelper = $cacheHelper;
+    }
+
     public function index(Request $request)
     {
         $this->authorize('viewAny', Restaurant::class);
 
-        $cacheKey = $this->generateCacheKey($request->all());
+        $cacheKey = $this->cacheHelper->generateKey('restaurants', $request->all());
 
-        $restaurants = Cache::remember($cacheKey, 3600, function () use ($request) {
+        $restaurants = $this->cacheHelper->remember($cacheKey, 3600, function () use ($request) {
             $query = Restaurant::with(['address', 'reviews']);
-
             $this->applyFilters($query, $request);
             $this->applySorting($query, $request);
             $this->applyLimit($query, $request);
@@ -38,12 +44,6 @@ class RestaurantController extends Controller
         });
 
         return RestaurantResource::collection($restaurants);
-    }
-
-    private function generateCacheKey(array $params)
-    {
-        ksort($params);
-        return 'restaurants:' . http_build_query($params);
     }
 
     private function applyFilters($query, Request $request)
@@ -115,7 +115,7 @@ class RestaurantController extends Controller
 
         $restaurant->save();
 
-        $this->invalidateCache();
+        $this->cacheHelper->flush();
 
         return new RestaurantResource($restaurant->load('address'));
     }
@@ -142,11 +142,6 @@ class RestaurantController extends Controller
         return $restaurant?->image;
     }
 
-    private function invalidateCache()
-    {
-        Cache::flush();
-    }
-
 
     /**
      * Display the specified resource.
@@ -155,9 +150,9 @@ class RestaurantController extends Controller
     {
         $this->authorize('view', $restaurant);
 
-        $cacheKey = "restaurant:{$restaurant->id}";
+        $cacheKey = $this->cacheHelper->generateKey('restaurant', ['id' => $restaurant->id]);
 
-        $restaurantDetails = Cache::remember($cacheKey, 3600, function () use ($restaurant) {
+        $restaurantDetails = $this->cacheHelper->remember($cacheKey, 3600, function () use ($restaurant) {
             return $restaurant->load(['address', 'reviews.user']);
         });
 
@@ -180,7 +175,7 @@ class RestaurantController extends Controller
 
         $restaurant->address?->update($validatedData['address'] ?? []);
 
-        $this->invalidateCache();
+        $this->cacheHelper->flush();
 
         return new RestaurantResource($restaurant->load('address'));
     }
@@ -199,7 +194,7 @@ class RestaurantController extends Controller
         $restaurant->address?->delete();
         $restaurant->delete();
 
-        $this->invalidateCache();
+        $this->cacheHelper->flush();
 
         return response(status: 204);
     }
@@ -211,7 +206,7 @@ class RestaurantController extends Controller
         $restaurant->publicate = !$restaurant->publicate;
         $restaurant->save();
 
-        $this->invalidateCache();
+        $this->cacheHelper->flush();
 
         $status = $restaurant->publicate ? 'published' : 'unpublished';
 

@@ -7,14 +7,20 @@ use App\Http\Requests\StoreReviewRequest;
 use App\Http\Resources\ReviewResource;
 use App\Models\Restaurant;
 use App\Models\Review;
+use App\Helpers\CacheHelper;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 
 class ReviewController extends Controller
 {
 
     use AuthorizesRequests;
+
+    private CacheHelper $cacheHelper;
+
+    public function __construct(CacheHelper $cacheHelper)
+    {
+        $this->cacheHelper = $cacheHelper;
+    }
 
     /**
      * Display a listing of the resource.
@@ -22,9 +28,14 @@ class ReviewController extends Controller
     public function index(Restaurant $restaurant)
     {
         $this->authorize('viewAny', Review::class);
-        $reviews = $restaurant->reviews()->latest();
 
-        return ReviewResource::collection($reviews->get());
+        $cacheKey = $this->cacheHelper->generateKey('reviews', ['restaurant_id' => $restaurant->id]);
+
+        $reviews = $this->cacheHelper->remember($cacheKey, 3600, function () use ($restaurant) {
+            return $restaurant->reviews()->latest()->get();
+        });
+
+        return ReviewResource::collection($reviews);
     }
 
     /**
@@ -46,6 +57,8 @@ class ReviewController extends Controller
             'review'  => $request->validated('review'),
         ]);
 
+        $this->cacheHelper->flush();
+
         return new ReviewResource($review->load('user'));
     }
 
@@ -55,7 +68,14 @@ class ReviewController extends Controller
     public function show(Restaurant $restaurant, Review $review)
     {
         $this->authorize('view', $review);
-        return new ReviewResource($review);
+
+        $cacheKey = $this->cacheHelper->generateKey('review', ['id' => $review->id]);
+
+        $reviewDetails = $this->cacheHelper->remember($cacheKey, 3600, function () use ($review) {
+            return $review;
+        });
+
+        return new ReviewResource($reviewDetails);
     }
 
     /**
@@ -64,7 +84,11 @@ class ReviewController extends Controller
     public function destroy(Restaurant $restaurant, Review $review)
     {
         $this->authorize('delete', $review);
+
         $review->delete();
+
+        $this->cacheHelper->flush();
+
         return response(status: 204);
     }
 }
