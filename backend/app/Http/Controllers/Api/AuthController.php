@@ -97,4 +97,9 @@ class AuthController extends Controller
             'message' => 'Password changed successfully',
         ]);
     }
+
+    public function getUser(Request $request)
+    {
+        return $request->user();
+    }
 }
