@@ -21,9 +21,9 @@ class RestaurantFactory extends Factory
             'address_id' => Address::factory(),
             'name' => $this->faker->company(),
             'description' => $this->faker->paragraph(),
-            'image' => $this->faker->imageUrl(640, 480, 'food', true, 'Restaurant'),
+            'image' => '',
             'email' => $this->faker->unique()->safeEmail(),
-            'website' => $this->faker->url(),
+            'website' => $this->faker->domainName(),
             'publicate' => $this->faker->boolean(),
             'phone' => substr($this->faker->phoneNumber(), 0, 16),
         ];
