@@ -1,274 +1,932 @@
 {
-  "openapi": "3.0.0",
-  "info": {
-    "title": "TopKebab API",
-    "version": "1.0.0",
-    "description": "API documentation for the TopKebab application."
-  },
-  "servers": [
-    {
-      "url": "http://localhost/api",
-      "description": "Development server"
-    }
-  ],
-  "paths": {
-    "/restaurants": {
-      "get": {
-        "summary": "Get all restaurants",
-        "tags": ["Restaurants"],
-        "responses": {
-          "200": {
-            "description": "A list of restaurants",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Restaurant"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "summary": "Create a new restaurant",
-        "tags": ["Restaurants"],
-        "security": [{ "bearerAuth": [] }],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/StoreRestaurantRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Restaurant created successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Restaurant"
-                }
-              }
-            }
-          }
-        }
-      }
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Top Kebab API",
+        "version": "1.0.0",
+        "description": "OpenAPI (Swagger) documentation for the 'Top Kebab' system. This API allows you to manage restaurants (create, update, delete) and add reviews to each restaurant. Reviews contain a rating (1-5 stars) and optional text, which contributes to the restaurant's average rating. Bearer token authentication is required for most write operations."
     },
-    "/restaurants/{restaurantId}": {
-      "get": {
-        "summary": "Get a single restaurant",
-        "tags": ["Restaurants"],
-        "parameters": [
-          {
-            "name": "restaurantId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Restaurant details",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Restaurant"
-                }
-              }
-            }
-          }
+    "servers": [
+        {
+            "url": "http://localhost:8000/api",
+            "description": "Local development server"
         }
-      },
-      "put": {
-        "summary": "Update a restaurant",
-        "tags": ["Restaurants"],
-        "security": [{ "bearerAuth": [] }],
-        "parameters": [
-          {
-            "name": "restaurantId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateRestaurantRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Restaurant updated successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Restaurant"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "summary": "Delete a restaurant",
-        "tags": ["Restaurants"],
-        "security": [{ "bearerAuth": [] }],
-        "parameters": [
-          {
-            "name": "restaurantId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Restaurant deleted successfully"
-          }
-        }
-      }
-    },
-    "/login": {
-      "post": {
-        "summary": "Login to the application",
-        "tags": ["Authentication"],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Login successful",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "token": {
-                      "type": "string",
-                      "description": "The authentication token"
+    ],
+    "paths": {
+        "/register": {
+            "post": {
+                "tags": ["Auth"],
+                "summary": "Register a new user",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#/components/schemas/RegisterRequest" }
+                        }
                     }
-                  }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User registered successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": { "type": "string" },
+                                        "user": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": { "type": "number" },
+                                                "name": { "type": "string" },
+                                                "email": { "type": "string", "format": "email" }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "A user with this email already exists"
+                    },
+                    "422": {
+                        "description": "Validation error (e.g., invalid request data)"
+                    }
                 }
-              }
             }
-          }
-        }
-      }
-    },
-    "/register": {
-      "post": {
-        "summary": "Register a new user",
-        "tags": ["Authentication"],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RegisterRequest"
-              }
-            }
-          }
         },
-        "responses": {
-          "201": {
-            "description": "User registered successfully"
-          }
-        }
-      }
-    }
-  },
-  "components": {
-    "schemas": {
-      "Restaurant": {
-        "type": "object",
-        "properties": {
-          "id": { "type": "string" },
-          "name": { "type": "string" },
-          "description": { "type": "string" },
-          "image": { "type": "string" },
-          "email": { "type": "string" },
-          "website": { "type": "string" },
-          "phone": { "type": "string" },
-          "address": {
-            "type": "object",
-            "properties": {
-              "street": { "type": "string" },
-              "city": { "type": "string" },
-              "postal_code": { "type": "string" },
-              "house_no": { "type": "string" },
-              "apartment_no": { "type": "string" }
+        "/login": {
+            "post": {
+                "tags": ["Auth"],
+                "summary": "User login",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#/components/schemas/LoginRequest" }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Returns an access token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "token": {
+                                            "type": "string",
+                                            "description": "Bearer token to use in the `Authorization: Bearer <token>` header"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error or incorrect login credentials"
+                    }
+                }
             }
-          }
-        }
-      },
-      "StoreRestaurantRequest": {
-        "type": "object",
-        "properties": {
-          "name": { "type": "string" },
-          "description": { "type": "string" },
-          "image": { "type": "string" },
-          "email": { "type": "string" },
-          "website": { "type": "string" },
-          "phone": { "type": "string" },
-          "address": {
-            "type": "object",
-            "properties": {
-              "street": { "type": "string" },
-              "city": { "type": "string" },
-              "postal_code": { "type": "string" },
-              "house_no": { "type": "string" },
-              "apartment_no": { "type": "string" }
+        },
+        "/logout": {
+            "post": {
+                "tags": ["Auth"],
+                "summary": "Logout (invalidate token)",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Logged out successfully"
+                    },
+                    "401": {
+                        "description": "Unauthorized (no valid token provided)"
+                    }
+                }
             }
-          }
+        },
+        "/change-password": {
+            "post": {
+                "tags": ["Auth"],
+                "summary": "Change user password",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#/components/schemas/ChangePasswordRequest" }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Password changed successfully"
+                    },
+                    "422": {
+                        "description": "Validation error or incorrect current password"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            }
+        },
+        "/user": {
+            "get": {
+                "tags": ["Auth"],
+                "summary": "Get the currently authenticated user",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": { "type": "number" },
+                                        "name": { "type": "string" },
+                                        "email": { "type": "string", "format": "email" },
+                                        "role_id": { "type": "number" }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized (no valid token)"
+                    }
+                }
+            }
+        },
+        "/restaurants": {
+            "get": {
+                "tags": ["Restaurants"],
+                "summary": "List all restaurants",
+                "parameters": [
+                    {
+                        "name": "city",
+                        "in": "query",
+                        "description": "Filter by city name",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Filter by restaurant name",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "publicate",
+                        "in": "query",
+                        "description": "Filter by publication status (true/false)",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Limit the number of returned results",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "Sorting option (1=desc_by_date, 2=asc_by_date, 3=asc_by_name, 4=desc_by_name, 5=desc_by_rate, 6=asc_by_rate)",
+                        "schema": {
+                            "type": "number",
+                            "enum": [1, 2, 3, 4, 5, 6]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of restaurants",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Restaurant"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized to view restaurants (authorization policy)."
+                    }
+                }
+            },
+            "post": {
+                "tags": ["Restaurants"],
+                "summary": "Create a new restaurant",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#/components/schemas/StoreRestaurantRequest" }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "The restaurant has been created",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/RestaurantAdd" }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized or insufficient permissions"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/restaurants/{restaurant}": {
+            "get": {
+                "tags": ["Restaurants"],
+                "summary": "Get a single restaurant",
+                "parameters": [
+                    {
+                        "name": "restaurant",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID of the restaurant",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Restaurant data (matched with RestaurantResource)",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/Restaurant" }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Restaurant not found"
+                    },
+                    "401": {
+                        "description": "Unauthorized to view this restaurant (authorization policy)"
+                    }
+                }
+            },
+            "put": {
+                "tags": ["Restaurants"],
+                "summary": "Update an existing restaurant",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "restaurant",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID of the restaurant to update",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#/components/schemas/UpdateRestaurantRequest" }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated restaurant data (matched with RestaurantResource)",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/RestaurantAdd" }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized or insufficient permissions"
+                    },
+                    "404": {
+                        "description": "Restaurant not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Restaurants"],
+                "summary": "Delete an existing restaurant",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "restaurant",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID of the restaurant to delete",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Restaurant was deleted"
+                    },
+                    "401": {
+                        "description": "Unauthorized or insufficient permissions"
+                    },
+                    "404": {
+                        "description": "Restaurant not found"
+                    }
+                }
+            }
+        },
+        "/restaurants/{restaurant}/toggle-publish": {
+            "put": {
+                "tags": ["Restaurants"],
+                "summary": "Toggle the publish status of a restaurant",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "restaurant",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID of the restaurant",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns the updated publication status",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": { "type": "string" },
+                                        "restaurant": { "$ref": "#/components/schemas/Restaurant" }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized or insufficient permissions"
+                    },
+                    "404": {
+                        "description": "Restaurant not found"
+                    }
+                }
+            }
+        },
+        "/restaurants/{restaurant}/reviews": {
+            "get": {
+                "tags": ["Reviews"],
+                "summary": "List all reviews for a given restaurant",
+                "parameters": [
+                    {
+                        "name": "restaurant",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID of the restaurant",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of reviews for the specified restauran",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": { "$ref": "#/components/schemas/Review" }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized to view reviews"
+                    },
+                    "404": {
+                        "description": "Restaurant not found"
+                    }
+                }
+            },
+            "post": {
+                "tags": ["Reviews"],
+                "summary": "Add a review to a restaurant",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "restaurant",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID of the restaurant to add a review to",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": { "$ref": "#/components/schemas/StoreReviewRequest" }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Review has been created",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/Review" }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error (user has already reviewed, etc.)"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Restaurant not found"
+                    }
+                }
+            }
+        },
+        "/restaurants/{restaurant}/reviews/{review}": {
+            "get": {
+                "tags": ["Reviews"],
+                "summary": "Get a single review",
+                "parameters": [
+                    {
+                        "name": "restaurant",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID of the restaurant",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "review",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID of the review",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Review data",
+                        "content": {
+                            "application/json": {
+                                "schema": { "$ref": "#/components/schemas/Review" }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized or insufficient permissions to view this review"
+                    },
+                    "404": {
+                        "description": "Restaurant or review not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Reviews"],
+                "summary": "Delete an existing review",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "restaurant",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID of the restaurant",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "review",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID of the review to delete",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Review has been deleted"
+                    },
+                    "401": {
+                        "description": "Unauthorized or insufficient permissions"
+                    },
+                    "404": {
+                        "description": "Review or restaurant not found"
+                    }
+                }
+            }
         }
-      },
-      "LoginRequest": {
-        "type": "object",
-        "properties": {
-          "email": { "type": "string" },
-          "password": { "type": "string" }
-        }
-      },
-      "RegisterRequest": {
-        "type": "object",
-        "properties": {
-          "name": { "type": "string" },
-          "email": { "type": "string" },
-          "password": { "type": "string" },
-          "password_confirmation": { "type": "string" }
-        }
-      }
     },
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
-      }
+    "components": {
+        "securitySchemes": {
+            "BearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        },
+        "schemas": {
+            "RegisterRequest": {
+                "type": "object",
+                "required": ["name", "email", "password", "password_confirmation"],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "minLength": 8
+                    },
+                    "password_confirmation": {
+                        "type": "string",
+                        "format": "password"
+                    }
+                }
+            },
+            "LoginRequest": {
+                "type": "object",
+                "required": ["email", "password"],
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password"
+                    }
+                }
+            },
+            "ChangePasswordRequest": {
+                "type": "object",
+                "required": ["current_password", "new_password", "new_password_confirmation"],
+                "properties": {
+                    "current_password": {
+                        "type": "string",
+                        "format": "password"
+                    },
+                    "new_password": {
+                        "type": "string",
+                        "format": "password",
+                        "minLength": 8
+                    },
+                    "new_password_confirmation": {
+                        "type": "string",
+                        "format": "password"
+                    }
+                }
+            },
+            "StoreRestaurantRequest": {
+                "type": "object",
+                "required": ["name", "address"],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "image": {
+                        "type": "string",
+                        "description": "Base64-encoded image (optional)"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "maxLength": 255
+                    },
+                    "website": {
+                        "type": "string",
+                        "format": "url",
+                        "maxLength": 255
+                    },
+                    "phone": {
+                        "type": "string",
+                        "maxLength": 16
+                    },
+                    "address": {
+                        "type": "object",
+                        "required": ["street", "city", "postal_code", "house_no"],
+                        "properties": {
+                            "street": { "type": "string", "maxLength": 255 },
+                            "city": { "type": "string", "maxLength": 255 },
+                            "postal_code": { "type": "string", "maxLength": 20 },
+                            "house_no": { "type": "string", "maxLength": 10 },
+                            "apartment_no": { "type": "string", "maxLength": 10 }
+                        }
+                    }
+                }
+            },
+            "UpdateRestaurantRequest": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "image": {
+                        "type": "string",
+                        "description": "Base64-encoded image (optional)"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "maxLength": 255
+                    },
+                    "website": {
+                        "type": "string",
+                        "format": "url",
+                        "maxLength": 255
+                    },
+                    "phone": {
+                        "type": "string",
+                        "maxLength": 16
+                    },
+                    "address": {
+                        "type": "object",
+                        "properties": {
+                            "street": { "type": "string", "maxLength": 255 },
+                            "city": { "type": "string", "maxLength": 255 },
+                            "postal_code": { "type": "string", "maxLength": 20 },
+                            "house_no": { "type": "string", "maxLength": 10 },
+                            "apartment_no": { "type": "string", "maxLength": 10 }
+                        }
+                    },
+                    "delete_file": {
+                        "type": "boolean",
+                        "description": "If true, deletes the old image file (if any) without setting a new one"
+                    }
+                }
+            },
+            "StoreReviewRequest": {
+                "type": "object",
+                "required": ["rate", "review"],
+                "properties": {
+                    "rate": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 5
+                    },
+                    "review": {
+                        "type": "string",
+                        "maxLength": 1000
+                    }
+                }
+            },
+            "Restaurant": {
+                "type": "object",
+                "required": ["id", "name", "publicate", "average_rate"],
+                "properties": {
+                    "id": {
+                        "type": "number",
+                        "description": "Unique ID of the restaurant"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Restaurant name"
+                    },
+                    "description": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Restaurant description"
+                    },
+                    "image": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Image filename or base64-encoded content"
+                    },
+                    "email": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Contact email"
+                    },
+                    "website": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Restaurant website"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Contact phone"
+                    },
+                    "publicate": {
+                        "type": "boolean",
+                        "description": "Publication status"
+                    },
+                    "average_rate": {
+                        "type": "number",
+                        "description": "Average rating (1 decimal), or 0 if no reviews"
+                    },
+                    "address": {
+                        "$ref": "#/components/schemas/Address",
+                        "description": "Address data (only if loaded)"
+                    },
+                    "reviews": {
+                        "type": "array",
+                        "items": { "$ref": "#/components/schemas/Review" },
+                        "description": "List of reviews for this restaurant (only if loaded)"
+                    }
+                }
+            },
+            "RestaurantAdd": {
+                "type": "object",
+                "required": ["id", "name", "publicate", "average_rate"],
+                "properties": {
+                    "id": {
+                        "type": "number",
+                        "description": "Unique ID of the restaurant"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Restaurant name"
+                    },
+                    "description": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Restaurant description"
+                    },
+                    "image": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Image filename or base64-encoded content"
+                    },
+                    "email": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Contact email"
+                    },
+                    "website": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Restaurant website"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Contact phone"
+                    },
+                    "publicate": {
+                        "type": "boolean",
+                        "description": "Publication status"
+                    },
+                    "average_rate": {
+                        "type": "number",
+                        "description": "Average rating (1 decimal), or 0 if no reviews"
+                    },
+                    "address": {
+                        "$ref": "#/components/schemas/Address",
+                        "description": "Address data (only if loaded)"
+                    }
+                }
+            },
+            "Address": {
+                "type": "object",
+                "required": ["id", "street", "city", "postal_code", "house_no"],
+                "properties": {
+                    "id": {
+                        "type": "number",
+                        "description": "Unique ID of the address"
+                    },
+                    "street": {
+                        "type": "string"
+                    },
+                    "city": {
+                        "type": "string"
+                    },
+                    "postal_code": {
+                        "type": "string"
+                    },
+                    "house_no": {
+                        "type": "string"
+                    },
+                    "apartment_no": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                }
+            },
+            "Review": {
+                "type": "object",
+                "required": ["id", "restaurant_id", "user_id", "rate", "review", "created_at"],
+                "properties": {
+                    "id": {
+                        "type": "number",
+                        "description": "Unique ID of the review"
+                    },
+                    "restaurant_id": {
+                        "type": "number",
+                        "description": "The ID of the reviewed restaurant"
+                    },
+                    "user_id": {
+                        "type": "number",
+                        "description": "The ID of the user who wrote the review"
+                    },
+                    "rate": {
+                        "type": "integer",
+                        "description": "Rating score (1-5 stars)"
+                    },
+                    "review": {
+                        "type": "string",
+                        "description": "Review text"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "When the review was created"
+                    },
+                    "user_name": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Name of the user who wrote the review (only if loaded)"
+                    }
+                }
+            }
+        }
     }
-  }
 }
