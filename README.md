@@ -185,7 +185,17 @@ For detailed API documentation, visit `http://127.0.0.1:8000/swagger`
 ## Screenshots
 Below are screenshots from various parts of the Top Kebab application, showcasing the interface for desktop and mobile devices:
 
+## Desktop Screenshots
+![details.png](screenshots/details.png)
+![hp.png](screenshots/hp.png)
+![list.png](screenshots/list.png)
+![login.png](screenshots/login.png)
 
+## Mobile Screenshots
+![mobile_details.png](screenshots/mobile_details.png)
+![mobile_hp.png](screenshots/mobile_hp.png)
+![mobile_list.png](screenshots/mobile_list.png)
+![mobile_login.png](screenshots/mobile_login.png)
 
 ## License
 
