@@ -26,6 +26,7 @@ class RestaurantFactory extends Factory
             'website' => $this->faker->domainName(),
             'publicate' => $this->faker->boolean(),
             'phone' => substr($this->faker->phoneNumber(), 0, 16),
+            'created_at' => $this->faker->dateTimeBetween('-3 months', 'now'),
         ];
     }
 }
