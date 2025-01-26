@@ -125,10 +125,63 @@ function RestaurantDetails() {
                             </div>
                         </div>
                         <hr className="h-px my-4 border-0 bg-gray-300" />
+                        <div className="md:hidden block">
+                            <img
+                                src={
+                                    restaurant.image
+                                        ? `${process.env.REACT_APP_STORAGE_URL}/uploads/${restaurant.image}`
+                                        : '/placeholder.png'
+                                }
+                                className="w-full object-cover border border-gray-200 md:hidden block rounded-2xl h-100"
+                                alt={restaurant.name}
+                            />
+                        </div>
                         <p className="font-medium my-6">{restaurant.description}</p>
+                        <div className="info mb-2">
+                            {restaurant.phone && (
+                                <p className="mb-1">
+                                    <i className="fa-solid fa-phone-flip"></i>{' '}
+                                    <a href={`tel:${restaurant.phone}`}>{restaurant.phone}</a>
+                                </p>
+                            )}
+                            {restaurant.email && (
+                                <p className="mb-1">
+                                    <i className="fa-solid fa-envelope"></i>{' '}
+                                    <a href={`mailto:${restaurant.email}`}>{restaurant.email}</a>
+                                </p>
+                            )}
+                            {restaurant.address && (
+                                <p className="mb-1">
+                                    <i className="fa-solid fa-location-dot"></i>{' '}
+                                    {restaurant.address.street}{' '}
+                                    {restaurant.address.house_no && (
+                                        <span>{restaurant.address.house_no}</span>
+                                    )}
+                                    {restaurant.address.apartment_no && (
+                                        <span>, apt. {restaurant.address.apartment_no}</span>
+                                    )}
+                                    {', '}
+                                    {restaurant.address.postal_code}{' '}
+                                    {restaurant.address.city}
+                                </p>
+                            )}
+                            {restaurant.website && (
+                                <p className="mb-1">
+                                    <i className="fa-solid fa-globe"></i>{' '}
+                                    <a
+                                        href={restaurant.website}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        {restaurant.website}
+                                    </a>
+                                </p>
+                            )}
+                        </div>
                     </div>
                 </div>
             </section>
+
             <section className="my-6">
                 <h2 className="font-semibold text-xl mb-3">User reviews</h2>
                 <div className="flex flex-col-reverse md:flex-row gap-10">

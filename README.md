@@ -89,7 +89,7 @@ The application adopts a microservice-friendly architecture by separating the fr
 
 This relational structure ensures scalability and efficient querying for large datasets.
 
-![ERD](ERD.png)
+![ERD](erd.png)
 
 ---
 
